@@ -1,0 +1,165 @@
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id             String        @id @default(uuid())
+  nome           String
+  email          String        @unique
+  telefone       String?
+  senha          String
+  dataCriacao    DateTime      @default(now()) @map("data_criacao")
+  dataAtualizacao DateTime      @updatedAt @map("data_atualizacao")
+  tarefas        Tarefa[]
+  materias       Materia[]
+  eventos        Evento[]
+  provas         Prova[]
+  atividades     Atividade[]
+  perfil         Perfil?
+  notificacoes   Notificacao[]
+  
+  @@map("usuarios")
+}
+
+model Perfil {
+  id           String   @id @default(uuid())
+  biografia    String?
+  avatar       String?
+  tema         String   @default("claro")
+  usuarioId    String   @unique @map("usuario_id")
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@map("perfis")
+}
+
+model Materia {
+  id               String     @id @default(uuid())
+  nome             String
+  descricao        String?
+  cor              String?
+  dataCriacao      DateTime   @default(now()) @map("data_criacao")
+  dataAtualizacao  DateTime   @updatedAt @map("data_atualizacao")
+  usuarioId        String     @map("usuario_id")
+  usuario          Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  tarefas          Tarefa[]
+  provas           Prova[]
+  atividades       Atividade[]
+  
+  @@map("materias")
+}
+
+model Tarefa {
+  id               String     @id @default(uuid())
+  titulo           String
+  descricao        String?
+  dataVencimento   DateTime?  @map("data_vencimento")
+  prioridade       Prioridade @default(MEDIA)
+  status           Status     @default(PENDENTE)
+  dataCriacao      DateTime   @default(now()) @map("data_criacao")
+  dataAtualizacao  DateTime   @updatedAt @map("data_atualizacao")
+  usuarioId        String     @map("usuario_id")
+  usuario          Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  materiaId        String?    @map("materia_id")
+  materia          Materia?   @relation(fields: [materiaId], references: [id], onDelete: SetNull)
+  
+  @@map("tarefas")
+}
+
+model Evento {
+  id               String    @id @default(uuid())
+  titulo           String
+  descricao        String?
+  dataInicio       DateTime  @map("data_inicio")
+  dataFim          DateTime? @map("data_fim")
+  diaInteiro       Boolean   @default(false) @map("dia_inteiro")
+  local            String?
+  cor              String?
+  dataCriacao      DateTime  @default(now()) @map("data_criacao")
+  dataAtualizacao  DateTime  @updatedAt @map("data_atualizacao")
+  usuarioId        String    @map("usuario_id")
+  usuario          Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@map("eventos")
+}
+
+model Prova {
+  id               String   @id @default(uuid())
+  titulo           String
+  descricao        String?
+  data             DateTime
+  local            String?
+  nota             Float?
+  status           Status   @default(PENDENTE)
+  dataCriacao      DateTime @default(now()) @map("data_criacao")
+  dataAtualizacao  DateTime @updatedAt @map("data_atualizacao")
+  usuarioId        String   @map("usuario_id")
+  usuario          Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  materiaId        String?  @map("materia_id")
+  materia          Materia? @relation(fields: [materiaId], references: [id], onDelete: SetNull)
+  
+  @@map("provas")
+}
+
+model Atividade {
+  id               String   @id @default(uuid())
+  titulo           String
+  descricao        String?
+  dataVencimento   DateTime? @map("data_vencimento")
+  peso             Float?   
+  nota             Float?  
+  status           Status   @default(PENDENTE)
+  dataCriacao      DateTime @default(now()) @map("data_criacao")
+  dataAtualizacao  DateTime @updatedAt @map("data_atualizacao")
+  usuarioId        String   @map("usuario_id")
+  usuario          Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  materiaId        String?  @map("materia_id")
+  materia          Materia? @relation(fields: [materiaId], references: [id], onDelete: SetNull)
+  
+  @@map("atividades")
+}
+
+model Notificacao {
+  id               String            @id @default(uuid())
+  titulo           String
+  mensagem         String
+  lida             Boolean           @default(false)
+  tipo             TipoNotificacao   @default(INFORMACAO)
+  dataCriacao      DateTime          @default(now()) @map("data_criacao")
+  usuarioId        String            @map("usuario_id")
+  usuario          Usuario           @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@map("notificacoes")
+}
+
+enum Status {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDO
+  CANCELADO
+}
+
+enum Prioridade {
+  BAIXA
+  MEDIA
+  ALTA
+  URGENTE
+}
+
+enum TipoNotificacao {
+  INFORMACAO
+  AVISO
+  ALERTA
+}

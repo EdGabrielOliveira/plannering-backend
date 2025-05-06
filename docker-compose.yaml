@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Serviço da API
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: planner_api
+    ports:
+      - '3001:3001'
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/planner?schema=public
+      - NODE_ENV=development
+      - PORT=3001
+      - SWAGGER_ENABLED=true
+      - SWAGGER_TITLE=Planner API
+      - SWAGGER_DESCRIPTION=API para gerenciamento de tarefas, materias, eventos e provas
+      - SWAGGER_VERSION=1.0.0
+      - SWAGGER_PATH=docs
+    volumes:
+      - ./src:/home/app/src
+      - ./prisma:/home/app/prisma
+      - /home/app/node_modules
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - planner_network
+
+  # Serviço do banco de dados
+  db:
+    image: postgres:15
+    container_name: planner_postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=planner
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - planner_network
+
+# Volumes para persistência
+volumes:
+  postgres_data:
+    driver: local
+
+# Rede para comunicação dos serviços
+networks:
+  planner_network:
+    driver: bridge
