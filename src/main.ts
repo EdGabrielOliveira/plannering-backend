@@ -3,15 +3,11 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DateFormatInterceptor } from './interceptors/DateFormatInterceptor';
-import { PrismaService } from './prisma/prisma.service';
-import { PrismaUserFilterInterceptor } from './interceptors/PrismaUserFilterInterceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalInterceptors(new DateFormatInterceptor());
-  const prismaService = app.get(PrismaService);
-  app.useGlobalInterceptors(new PrismaUserFilterInterceptor(prismaService));
 
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
