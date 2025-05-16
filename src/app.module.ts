@@ -9,6 +9,8 @@ import { ProvasModule } from './provas/provas.module';
 import { AtividadesModule } from './atividades/atividades.module';
 import { NotificacoesModule } from './notificacoes/notificacoes.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { UserIdInterceptor } from './interceptors/UserIdInterceptor';
 
 @Module({
   imports: [
@@ -22,6 +24,12 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: UserIdInterceptor,
+    },
+  ],
 })
 export class AppModule {}

@@ -6,13 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ProvasService } from './provas.service';
 import { CreateProvaDto } from './dto/create-prova.dto';
 import { UpdateProvaDto } from './dto/update-prova.dto';
 import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
 
 @Controller('provas')
+@UseGuards(JwtAuthGuard)
 export class ProvasController {
   constructor(private readonly provasService: ProvasService) {}
 
