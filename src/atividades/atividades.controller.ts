@@ -20,35 +20,32 @@ export class AtividadesController {
   constructor(private readonly atividadesService: AtividadesService) {}
 
   @Post()
-  create(
-    @Body() createAtividadeDto: CreateAtividadeDto,
-    @GetCurrentUserId() userId: string,
-  ) {
-    createAtividadeDto.usuarioId = userId;
+  create(@GetCurrentUserId() @Body() createAtividadeDto: CreateAtividadeDto) {
     return this.atividadesService.create(createAtividadeDto);
   }
 
   @Get()
-  findAll(@GetCurrentUserId() userId: string) {
-    return this.atividadesService.findAll(userId);
+  findAll(@GetCurrentUserId() usuarioId: string) {
+    return this.atividadesService.findAll(usuarioId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @GetCurrentUserId() userId: string) {
-    return this.atividadesService.findOne(id, userId);
+  findOne(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.atividadesService.findOne(id, usuarioId);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @GetCurrentUserId()
+    @Param('id')
+    id: string,
     @Body() updateAtividadeDto: UpdateAtividadeDto,
-    @GetCurrentUserId() userId: string,
   ) {
-    return this.atividadesService.update(id, updateAtividadeDto, userId);
+    return this.atividadesService.update(id, updateAtividadeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @GetCurrentUserId() userId: string) {
-    return this.atividadesService.remove(id, userId);
+  remove(@GetCurrentUserId() @Param('id') id: string) {
+    return this.atividadesService.remove(id);
   }
 }

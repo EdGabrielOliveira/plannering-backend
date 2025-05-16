@@ -23,9 +23,9 @@ export class AtividadesService {
     return atividade;
   }
 
-  findAll(userId: string) {
+  findAll(usuarioId: string) {
     return this.prismaService.atividade.findMany({
-      where: { usuarioId: userId }, // Mudança aqui: use usuarioId em vez de id
+      where: { usuarioId },
       include: {
         materia: true,
         usuario: true,
@@ -33,16 +33,9 @@ export class AtividadesService {
     });
   }
 
-  findOne(id: string, userId?: string) {
-    const where: any = { id };
-
-    // Se userId for fornecido, adiciona à condição de filtro
-    if (userId) {
-      where.usuarioId = userId;
-    }
-
+  findOne(id: string, usuarioId: string) {
     return this.prismaService.atividade.findUnique({
-      where: where,
+      where: { usuarioId, id },
       include: {
         materia: true,
         usuario: true,
@@ -50,30 +43,18 @@ export class AtividadesService {
     });
   }
 
-  update(id: string, updateAtividadeDto: UpdateAtividadeDto, userId?: string) {
-    const where: any = { id };
-
-    // Se userId for fornecido, adiciona à condição de filtro
-    if (userId) {
-      where.usuarioId = userId;
-    }
-
+  update(id: string, updateAtividadeDto: UpdateAtividadeDto) {
     return this.prismaService.atividade.update({
-      where: where,
+      where: {
+        id,
+      },
       data: updateAtividadeDto,
     });
   }
 
-  remove(id: string, userId?: string) {
-    const where: any = { id };
-
-    // Se userId for fornecido, adiciona à condição de filtro
-    if (userId) {
-      where.usuarioId = userId;
-    }
-
+  remove(id: string) {
     return this.prismaService.atividade.delete({
-      where: where,
+      where: { id },
     });
   }
 }
