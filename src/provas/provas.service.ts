@@ -23,8 +23,9 @@ export class ProvasService {
     return prova;
   }
 
-  findAll() {
+  findAll(id: string) {
     return this.prismaService.prova.findMany({
+      where: { id },
       include: {
         materia: true,
         usuario: true,

@@ -23,8 +23,9 @@ export class AtividadesService {
     return atividade;
   }
 
-  findAll() {
+  findAll(id: string) {
     return this.prismaService.atividade.findMany({
+      where: { id },
       include: {
         materia: true,
         usuario: true,

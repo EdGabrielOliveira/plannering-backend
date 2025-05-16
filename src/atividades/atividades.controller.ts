@@ -22,8 +22,8 @@ export class AtividadesController {
   }
 
   @Get()
-  findAll() {
-    return this.atividadesService.findAll();
+  findAll(@GetCurrentUserId() id: string) {
+    return this.atividadesService.findAll(id);
   }
 
   @Get(':id')

@@ -23,8 +23,10 @@ export class EventosService {
     return evento;
   }
 
-  findAll() {
-    return this.prismaService.evento.findMany({});
+  findAll(id: string) {
+    return this.prismaService.evento.findMany({
+      where: { id },
+    });
   }
 
   findOne(id: string) {

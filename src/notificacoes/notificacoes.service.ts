@@ -24,8 +24,10 @@ export class NotificacoesService {
     return notificacoes;
   }
 
-  findAll() {
-    return this.prismaService.notificacao.findMany({});
+  findAll(id: string) {
+    return this.prismaService.notificacao.findMany({
+      where: { id },
+    });
   }
 
   findOne(id: string) {

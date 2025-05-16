@@ -26,8 +26,8 @@ export class NotificacoesController {
   }
 
   @Get()
-  findAll() {
-    return this.notificacoesService.findAll();
+  findAll(@GetCurrentUserId() id: string) {
+    return this.notificacoesService.findAll(id);
   }
 
   @Get(':id')

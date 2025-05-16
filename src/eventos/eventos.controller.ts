@@ -22,8 +22,8 @@ export class EventosController {
   }
 
   @Get()
-  findAll() {
-    return this.eventosService.findAll();
+  findAll(@GetCurrentUserId() id: string) {
+    return this.eventosService.findAll(id);
   }
 
   @Get(':id')

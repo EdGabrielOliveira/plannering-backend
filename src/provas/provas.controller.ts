@@ -22,8 +22,8 @@ export class ProvasController {
   }
 
   @Get()
-  findAll() {
-    return this.provasService.findAll();
+  findAll(@GetCurrentUserId() id: string) {
+    return this.provasService.findAll(id);
   }
 
   @Get(':id')
