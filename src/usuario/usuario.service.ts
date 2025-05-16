@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CriarUsuarioDTO } from './dto/create-usuario.dto';
 import { AtualizarUsuarioDTO } from './dto/update-usuario.dto';
 
@@ -9,6 +9,16 @@ export class UsuarioService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(CriarUsuarioDTO: CriarUsuarioDTO) {
+    // Verificar se o email já existe
+    const emailExistente = await this.prismaService.usuario.findUnique({
+      where: { email: CriarUsuarioDTO.email },
+    });
+
+    if (emailExistente) {
+      throw new ConflictException('Email já está em uso');
+    }
+
+    // Criar o usuário
     const usuario = await this.prismaService.usuario.create({
       data: {
         nome: CriarUsuarioDTO.nome,
@@ -16,19 +26,26 @@ export class UsuarioService {
         senha: CriarUsuarioDTO.senha,
         telefone: CriarUsuarioDTO.telefone,
       },
+      // Selecionar apenas os campos necessários
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
+        // NÃO inclua a senha
+      },
     });
 
     return usuario;
   }
 
-  finfdAll() {
+  findAll() {
     return this.prismaService.usuario.findMany({
-      include: {
-        atividades: true,
-        provas: true,
-        tarefas: true,
-        materias: true,
-        eventos: true,
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
       },
     });
   }
@@ -36,28 +53,34 @@ export class UsuarioService {
   findOne(id: string) {
     return this.prismaService.usuario.findUnique({
       where: { id },
-      include: {
-        atividades: true,
-        provas: true,
-        tarefas: true,
-        materias: true,
-        eventos: true,
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
       },
     });
   }
 
   update(id: string, AtualizarUsuarioDTO: AtualizarUsuarioDTO) {
     return this.prismaService.usuario.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: AtualizarUsuarioDTO,
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
+      },
     });
   }
 
   remove(id: string) {
     return this.prismaService.usuario.delete({
       where: { id },
+      select: {
+        id: true,
+      },
     });
   }
 }

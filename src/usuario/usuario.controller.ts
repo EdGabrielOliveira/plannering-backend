@@ -42,6 +42,6 @@ export class UsuarioController {
 
   @Get()
   buscarTodos() {
-    return this.usuarioService.finfdAll();
+    return this.usuarioService.findAll();
   }
 }
