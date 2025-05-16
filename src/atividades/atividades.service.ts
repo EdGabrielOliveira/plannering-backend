@@ -43,18 +43,26 @@ export class AtividadesService {
     });
   }
 
-  update(id: string, updateAtividadeDto: UpdateAtividadeDto) {
+  update(
+    id: string,
+    usuarioId: string,
+    updateAtividadeDto: UpdateAtividadeDto,
+  ) {
     return this.prismaService.atividade.update({
       where: {
         id,
+        usuarioId,
       },
       data: updateAtividadeDto,
     });
   }
 
-  remove(id: string) {
+  remove(id: string, usuarioId: string) {
     return this.prismaService.atividade.delete({
-      where: { id },
+      where: {
+        id,
+        usuarioId,
+      },
     });
   }
 }

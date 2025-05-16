@@ -25,25 +25,26 @@ export class EventosController {
   }
 
   @Get()
-  findAll(@GetCurrentUserId() id: string) {
-    return this.eventosService.findAll(id);
+  findAll(@GetCurrentUserId() usuarioId: string) {
+    return this.eventosService.findAll(usuarioId);
   }
 
   @Get(':id')
-  findOne(@GetCurrentUserId() @Param('id') id: string) {
-    return this.eventosService.findOne(id);
+  findOne(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.eventosService.findOne(usuarioId, id);
   }
 
   @Patch(':id')
   update(
-    @GetCurrentUserId() @Param('id') id: string,
+    @GetCurrentUserId() usuarioId: string,
+    @Param('id') id: string,
     @Body() updateEventoDto: UpdateEventoDto,
   ) {
-    return this.eventosService.update(id, updateEventoDto);
+    return this.eventosService.update(usuarioId, id, updateEventoDto);
   }
 
   @Delete(':id')
-  remove(@GetCurrentUserId() @Param('id') id: string) {
-    return this.eventosService.remove(id);
+  remove(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.eventosService.remove(id, usuarioId);
   }
 }

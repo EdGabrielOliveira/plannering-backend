@@ -23,32 +23,34 @@ export class EventosService {
     return evento;
   }
 
-  findAll(id: string) {
+  findAll(usuarioId: string) {
     return this.prismaService.evento.findMany({
-      where: { id },
+      where: { usuarioId },
     });
   }
 
-  findOne(id: string) {
+  findOne(id: string, usuarioId: string) {
     return this.prismaService.evento.findUnique({
       where: {
-        id: id,
+        id,
+        usuarioId,
       },
     });
   }
 
-  update(id: string, updateEventoDto: UpdateEventoDto) {
+  update(id: string, usuarioId: string, updateEventoDto: UpdateEventoDto) {
     return this.prismaService.evento.update({
       where: {
-        id: id,
+        id,
+        usuarioId,
       },
       data: updateEventoDto,
     });
   }
 
-  remove(id: string) {
+  remove(id: string, usuarioId: string) {
     return this.prismaService.evento.delete({
-      where: { id },
+      where: { id, usuarioId },
     });
   }
 }

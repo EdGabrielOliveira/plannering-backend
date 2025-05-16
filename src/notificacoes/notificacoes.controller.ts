@@ -29,27 +29,27 @@ export class NotificacoesController {
   }
 
   @Get()
-  findAll(@GetCurrentUserId() id: string) {
-    return this.notificacoesService.findAll(id);
+  findAll(@GetCurrentUserId() usuarioId: string) {
+    return this.notificacoesService.findAll(usuarioId);
   }
 
   @Get(':id')
-  findOne(@GetCurrentUserId() @Param('id') id: string) {
-    return this.notificacoesService.findOne(id);
+  findOne(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.notificacoesService.findOne(id, usuarioId);
   }
 
   @Patch(':id')
   update(
-    @GetCurrentUserId()
+    @GetCurrentUserId() usuarioId: string,
     @Param('id')
     id: string,
     @Body() updateNotificacoeDto: UpdateNotificacoeDto,
   ) {
-    return this.notificacoesService.update(id, updateNotificacoeDto);
+    return this.notificacoesService.update(id, usuarioId, updateNotificacoeDto);
   }
 
   @Delete(':id')
-  remove(@GetCurrentUserId() @Param('id') id: string) {
-    return this.notificacoesService.remove(id);
+  remove(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.notificacoesService.remove(id, usuarioId);
   }
 }

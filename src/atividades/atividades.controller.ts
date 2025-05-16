@@ -36,16 +36,16 @@ export class AtividadesController {
 
   @Patch(':id')
   update(
-    @GetCurrentUserId()
+    @GetCurrentUserId() usuarioId: string,
     @Param('id')
     id: string,
     @Body() updateAtividadeDto: UpdateAtividadeDto,
   ) {
-    return this.atividadesService.update(id, updateAtividadeDto);
+    return this.atividadesService.update(id, usuarioId, updateAtividadeDto);
   }
 
   @Delete(':id')
-  remove(@GetCurrentUserId() @Param('id') id: string) {
-    return this.atividadesService.remove(id);
+  remove(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.atividadesService.remove(id, usuarioId);
   }
 }

@@ -22,9 +22,9 @@ export class TarefasService {
     return tarefa;
   }
 
-  findAll(id: string) {
+  findAll(usuarioId: string) {
     return this.prismaService.tarefa.findMany({
-      where: { id },
+      where: { usuarioId },
       include: {
         materia: true,
         usuario: true,
@@ -32,24 +32,25 @@ export class TarefasService {
     });
   }
 
-  findOne(id: string) {
+  findOne(id: string, usuarioId: string) {
     return this.prismaService.tarefa.findUnique({
-      where: { id },
+      where: { id, usuarioId },
     });
   }
 
-  update(id: string, updateTarefaDto: UpdateTarefaDto) {
+  update(id: string, usuarioId: string, updateTarefaDto: UpdateTarefaDto) {
     return this.prismaService.tarefa.update({
       where: {
         id,
+        usuarioId,
       },
       data: updateTarefaDto,
     });
   }
 
-  remove(id: string) {
+  remove(id: string, usuarioId: string) {
     return this.prismaService.tarefa.delete({
-      where: { id },
+      where: { id, usuarioId },
     });
   }
 }

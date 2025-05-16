@@ -19,9 +19,9 @@ export class MateriasService {
     return materia;
   }
 
-  findAll(id: string) {
+  findAll(usuarioId: string) {
     return this.prismaService.materia.findMany({
-      where: { id },
+      where: { usuarioId },
       include: {
         usuario: true,
         tarefas: true,
@@ -30,9 +30,9 @@ export class MateriasService {
     });
   }
 
-  findOne(id: string) {
+  findOne(id: string, usuarioId: string) {
     return this.prismaService.materia.findUnique({
-      where: { id },
+      where: { id, usuarioId },
       include: {
         usuario: true,
         tarefas: true,
@@ -41,18 +41,19 @@ export class MateriasService {
     });
   }
 
-  update(id: string, updateMateriaDto: UpdateMateriaDto) {
+  update(id: string, usuarioId: string, updateMateriaDto: UpdateMateriaDto) {
     return this.prismaService.materia.update({
       where: {
         id,
+        usuarioId,
       },
       data: updateMateriaDto,
     });
   }
 
-  remove(id: string) {
+  remove(id: string, usuarioId: string) {
     return this.prismaService.materia.delete({
-      where: { id },
+      where: { id, usuarioId },
     });
   }
 }

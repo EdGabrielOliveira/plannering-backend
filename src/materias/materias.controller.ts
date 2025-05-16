@@ -25,25 +25,26 @@ export class MateriasController {
   }
 
   @Get()
-  findAll(@GetCurrentUserId() id: string) {
-    return this.materiasService.findAll(id);
+  findAll(@GetCurrentUserId() usuarioId: string) {
+    return this.materiasService.findAll(usuarioId);
   }
 
   @Get(':id')
-  findOne(@GetCurrentUserId() @Param('id') id: string) {
-    return this.materiasService.findOne(id);
+  findOne(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.materiasService.findOne(id, usuarioId);
   }
 
   @Patch(':id')
   update(
-    @GetCurrentUserId() @Param('id') id: string,
+    @GetCurrentUserId() usuarioId: string,
+    @Param('id') id: string,
     @Body() updateMateriaDto: UpdateMateriaDto,
   ) {
-    return this.materiasService.update(id, updateMateriaDto);
+    return this.materiasService.update(id, usuarioId, updateMateriaDto);
   }
 
   @Delete(':id')
-  remove(@GetCurrentUserId() @Param('id') id: string) {
-    return this.materiasService.remove(id);
+  remove(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.materiasService.remove(id, usuarioId);
   }
 }

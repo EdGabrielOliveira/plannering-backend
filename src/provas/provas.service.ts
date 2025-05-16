@@ -23,9 +23,9 @@ export class ProvasService {
     return prova;
   }
 
-  findAll(id: string) {
+  findAll(usuarioId: string) {
     return this.prismaService.prova.findMany({
-      where: { id },
+      where: { usuarioId },
       include: {
         materia: true,
         usuario: true,
@@ -33,9 +33,9 @@ export class ProvasService {
     });
   }
 
-  findOne(id: string) {
+  findOne(id: string, usuarioId: string) {
     return this.prismaService.prova.findUnique({
-      where: { id },
+      where: { id, usuarioId },
       include: {
         materia: true,
         usuario: true,
@@ -43,18 +43,19 @@ export class ProvasService {
     });
   }
 
-  update(id: string, updateProvaDto: UpdateProvaDto) {
+  update(id: string, usuarioId: string, updateProvaDto: UpdateProvaDto) {
     return this.prismaService.prova.update({
       where: {
         id,
+        usuarioId,
       },
       data: updateProvaDto,
     });
   }
 
-  remove(id: string) {
+  remove(id: string, usuarioId: string) {
     return this.prismaService.prova.delete({
-      where: { id },
+      where: { id, usuarioId },
     });
   }
 }

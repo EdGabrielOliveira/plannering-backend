@@ -25,25 +25,26 @@ export class ProvasController {
   }
 
   @Get()
-  findAll(@GetCurrentUserId() id: string) {
-    return this.provasService.findAll(id);
+  findAll(@GetCurrentUserId() usuarioId: string) {
+    return this.provasService.findAll(usuarioId);
   }
 
   @Get(':id')
-  findOne(@GetCurrentUserId() @Param('id') id: string) {
-    return this.provasService.findOne(id);
+  findOne(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.provasService.findOne(id, usuarioId);
   }
 
   @Patch(':id')
   update(
-    @GetCurrentUserId() @Param('id') id: string,
+    @GetCurrentUserId() usuarioId: string,
+    @Param('id') id: string,
     @Body() updateProvaDto: UpdateProvaDto,
   ) {
-    return this.provasService.update(id, updateProvaDto);
+    return this.provasService.update(id, usuarioId, updateProvaDto);
   }
 
   @Delete(':id')
-  remove(@GetCurrentUserId() @Param('id') id: string) {
-    return this.provasService.remove(id);
+  remove(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.provasService.remove(id, usuarioId);
   }
 }

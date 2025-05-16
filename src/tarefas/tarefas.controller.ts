@@ -25,25 +25,26 @@ export class TarefasController {
   }
 
   @Get()
-  findAll(@GetCurrentUserId() id: string) {
-    return this.tarefasService.findAll(id);
+  findAll(@GetCurrentUserId() usuarioId: string) {
+    return this.tarefasService.findAll(usuarioId);
   }
 
   @Get(':id')
-  findOne(@GetCurrentUserId() @Param('id') id: string) {
-    return this.tarefasService.findOne(id);
+  findOne(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.tarefasService.findOne(id, usuarioId);
   }
 
   @Patch(':id')
   update(
-    @GetCurrentUserId() @Param('id') id: string,
+    @GetCurrentUserId() usuarioId: string,
+    @Param('id') id: string,
     @Body() updateTarefaDto: UpdateTarefaDto,
   ) {
-    return this.tarefasService.update(id, updateTarefaDto);
+    return this.tarefasService.update(id, usuarioId, updateTarefaDto);
   }
 
   @Delete(':id')
-  remove(@GetCurrentUserId() @Param('id') id: string) {
-    return this.tarefasService.remove(id);
+  remove(@GetCurrentUserId() usuarioId: string, @Param('id') id: string) {
+    return this.tarefasService.remove(id, usuarioId);
   }
 }

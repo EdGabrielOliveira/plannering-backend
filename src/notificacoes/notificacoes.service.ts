@@ -24,33 +24,40 @@ export class NotificacoesService {
     return notificacoes;
   }
 
-  findAll(id: string) {
+  findAll(usuarioId: string) {
     return this.prismaService.notificacao.findMany({
-      where: { id },
+      where: { usuarioId },
     });
   }
 
-  findOne(id: string) {
+  findOne(id: string, usuarioId: string) {
     return this.prismaService.notificacao.findUnique({
       where: {
         id,
+        usuarioId,
       },
     });
   }
 
-  update(id: string, updateNotificacoeDto: UpdateNotificacoeDto) {
+  update(
+    id: string,
+    usuarioId: string,
+    updateNotificacoeDto: UpdateNotificacoeDto,
+  ) {
     return this.prismaService.notificacao.update({
       where: {
         id,
+        usuarioId,
       },
       data: updateNotificacoeDto,
     });
   }
 
-  remove(id: string) {
+  remove(id: string, usuarioId: string) {
     return this.prismaService.notificacao.delete({
       where: {
         id,
+        usuarioId,
       },
     });
   }
