@@ -22,8 +22,9 @@ export class TarefasService {
     return tarefa;
   }
 
-  findAll() {
+  findAll(id: string) {
     return this.prismaService.tarefa.findMany({
+      where: { id },
       include: {
         materia: true,
         usuario: true,
