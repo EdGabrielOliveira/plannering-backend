@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class EventosService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createEventoDto: CreateEventoDto) {
+  async create(createEventoDto: CreateEventoDto, userId: string) {
     const evento = await this.prismaService.evento.create({
       data: {
         titulo: createEventoDto.titulo,
@@ -17,38 +17,43 @@ export class EventosService {
         local: createEventoDto.local,
         diaInteiro: createEventoDto.diaInteiro,
         cor: createEventoDto.cor,
-        usuarioId: createEventoDto.usuarioId,
+        usuarioId: userId,
       },
     });
     return evento;
   }
 
-  findAll(id: string) {
+  findAll(userId: string) {
     return this.prismaService.evento.findMany({
-      where: { id },
+      where: { usuarioId: userId },
     });
   }
 
-  findOne(id: string) {
+  findOne(id: string, userId: string) {
     return this.prismaService.evento.findUnique({
       where: {
         id: id,
+        usuarioId: userId,
       },
     });
   }
 
-  update(id: string, updateEventoDto: UpdateEventoDto) {
+  update(id: string, updateEventoDto: UpdateEventoDto, userId: string) {
     return this.prismaService.evento.update({
       where: {
         id: id,
+        usuarioId: userId,
       },
       data: updateEventoDto,
     });
   }
 
-  remove(id: string) {
+  remove(id: string, userId: string) {
     return this.prismaService.evento.delete({
-      where: { id },
+      where: {
+        id,
+        usuarioId: userId,
+      },
     });
   }
 }
