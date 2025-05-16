@@ -10,13 +10,14 @@ import {
 import { EventosService } from './eventos.service';
 import { CreateEventoDto } from './dto/create-evento.dto';
 import { UpdateEventoDto } from './dto/update-evento.dto';
+import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
 
 @Controller('eventos')
 export class EventosController {
   constructor(private readonly eventosService: EventosService) {}
 
   @Post()
-  create(@Body() createEventoDto: CreateEventoDto) {
+  create(@GetCurrentUserId() @Body() createEventoDto: CreateEventoDto) {
     return this.eventosService.create(createEventoDto);
   }
 
@@ -26,17 +27,20 @@ export class EventosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@GetCurrentUserId() @Param('id') id: string) {
     return this.eventosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventoDto: UpdateEventoDto) {
+  update(
+    @GetCurrentUserId() @Param('id') id: string,
+    @Body() updateEventoDto: UpdateEventoDto,
+  ) {
     return this.eventosService.update(id, updateEventoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@GetCurrentUserId() @Param('id') id: string) {
     return this.eventosService.remove(id);
   }
 }

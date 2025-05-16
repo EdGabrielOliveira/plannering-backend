@@ -10,13 +10,18 @@ import {
 import { NotificacoesService } from './notificacoes.service';
 import { CreateNotificacoeDto } from './dto/create-notificacoe.dto';
 import { UpdateNotificacoeDto } from './dto/update-notificacoe.dto';
+import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
 
 @Controller('notificacoes')
 export class NotificacoesController {
   constructor(private readonly notificacoesService: NotificacoesService) {}
 
   @Post()
-  create(@Body() createNotificacoeDto: CreateNotificacoeDto) {
+  create(
+    @GetCurrentUserId()
+    @Body()
+    createNotificacoeDto: CreateNotificacoeDto,
+  ) {
     return this.notificacoesService.create(createNotificacoeDto);
   }
 
@@ -26,20 +31,22 @@ export class NotificacoesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@GetCurrentUserId() @Param('id') id: string) {
     return this.notificacoesService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @GetCurrentUserId()
+    @Param('id')
+    id: string,
     @Body() updateNotificacoeDto: UpdateNotificacoeDto,
   ) {
     return this.notificacoesService.update(id, updateNotificacoeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@GetCurrentUserId() @Param('id') id: string) {
     return this.notificacoesService.remove(id);
   }
 }

@@ -10,13 +10,14 @@ import {
 import { MateriasService } from './materias.service';
 import { CreateMateriaDto } from './dto/create-materia.dto';
 import { UpdateMateriaDto } from './dto/update-materia.dto';
+import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
 
 @Controller('materias')
 export class MateriasController {
   constructor(private readonly materiasService: MateriasService) {}
 
   @Post()
-  create(@Body() createMateriaDto: CreateMateriaDto) {
+  create(@GetCurrentUserId() @Body() createMateriaDto: CreateMateriaDto) {
     return this.materiasService.create(createMateriaDto);
   }
 
@@ -26,17 +27,20 @@ export class MateriasController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@GetCurrentUserId() @Param('id') id: string) {
     return this.materiasService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMateriaDto: UpdateMateriaDto) {
+  update(
+    @GetCurrentUserId() @Param('id') id: string,
+    @Body() updateMateriaDto: UpdateMateriaDto,
+  ) {
     return this.materiasService.update(id, updateMateriaDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@GetCurrentUserId() @Param('id') id: string) {
     return this.materiasService.remove(id);
   }
 }

@@ -10,13 +10,14 @@ import {
 import { ProvasService } from './provas.service';
 import { CreateProvaDto } from './dto/create-prova.dto';
 import { UpdateProvaDto } from './dto/update-prova.dto';
+import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
 
 @Controller('provas')
 export class ProvasController {
   constructor(private readonly provasService: ProvasService) {}
 
   @Post()
-  create(@Body() createProvaDto: CreateProvaDto) {
+  create(@GetCurrentUserId() @Body() createProvaDto: CreateProvaDto) {
     return this.provasService.create(createProvaDto);
   }
 
@@ -26,17 +27,20 @@ export class ProvasController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@GetCurrentUserId() @Param('id') id: string) {
     return this.provasService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProvaDto: UpdateProvaDto) {
+  update(
+    @GetCurrentUserId() @Param('id') id: string,
+    @Body() updateProvaDto: UpdateProvaDto,
+  ) {
     return this.provasService.update(id, updateProvaDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@GetCurrentUserId() @Param('id') id: string) {
     return this.provasService.remove(id);
   }
 }

@@ -10,13 +10,14 @@ import {
 import { AtividadesService } from './atividades.service';
 import { CreateAtividadeDto } from './dto/create-atividade.dto';
 import { UpdateAtividadeDto } from './dto/update-atividade.dto';
+import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
 
 @Controller('atividades')
 export class AtividadesController {
   constructor(private readonly atividadesService: AtividadesService) {}
 
   @Post()
-  create(@Body() createAtividadeDto: CreateAtividadeDto) {
+  create(@GetCurrentUserId() @Body() createAtividadeDto: CreateAtividadeDto) {
     return this.atividadesService.create(createAtividadeDto);
   }
 
@@ -26,20 +27,22 @@ export class AtividadesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@GetCurrentUserId() @Param('id') id: string) {
     return this.atividadesService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @GetCurrentUserId()
+    @Param('id')
+    id: string,
     @Body() updateAtividadeDto: UpdateAtividadeDto,
   ) {
     return this.atividadesService.update(id, updateAtividadeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@GetCurrentUserId() @Param('id') id: string) {
     return this.atividadesService.remove(id);
   }
 }
