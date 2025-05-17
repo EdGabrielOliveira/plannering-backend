@@ -22,7 +22,11 @@ export class AuthService {
       },
     });
     return {
-      access_token: this.jwt.sign({ sub: user.id, email: user.email }),
+      access_token: this.jwt.sign({
+        sub: user.id,
+        email: user.email,
+        nome: user.nome,
+      }),
       user: {
         id: user.id,
         nome: user.nome,
@@ -41,7 +45,11 @@ export class AuthService {
     }
 
     return {
-      access_token: this.jwt.sign({ sub: user.id, email: user.email }),
+      access_token: this.jwt.sign({
+        sub: user.id,
+        email: user.email,
+        nome: user.nome,
+      }),
       user: {
         id: user.id,
         nome: user.nome,
