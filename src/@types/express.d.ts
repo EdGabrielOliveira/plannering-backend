@@ -3,6 +3,7 @@ declare module 'express' {
     user?: {
       email: string;
       id: string;
+      nome: string;
     };
   }
 }
