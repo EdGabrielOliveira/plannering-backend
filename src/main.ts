@@ -2,12 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { DateFormatInterceptor } from './interceptors/DateFormatInterceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  app.useGlobalInterceptors(new DateFormatInterceptor());
 
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
