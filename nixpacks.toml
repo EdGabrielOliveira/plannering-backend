@@ -1,0 +1,13 @@
+[variables]
+NODE_ENV = "production"
+
+[phases.install]
+dependsOn = ["setup"]
+cmds = ["npm install", "bunx prisma generate"]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm run start:prod"

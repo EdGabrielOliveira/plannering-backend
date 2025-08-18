@@ -54,10 +54,12 @@ async function bootstrap() {
   app.enableCors({
     origin: process.env.CORS_ORIGIN
       ? process.env.CORS_ORIGIN.split(',')
-      : ['http://localhost:3000'],
+      : process.env.NODE_ENV === 'production'
+        ? ['https://*.railway.app', 'https://*.vercel.app']
+        : ['http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
   });
 
   app.useGlobalPipes(
@@ -94,7 +96,7 @@ async function bootstrap() {
   }
 
   const port = process.env.PORT || 3003;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   console.log(`Aplicação iniciada com sucesso na porta ${port}`);
 }
 
