@@ -8,11 +8,16 @@ services:
       dockerfile: Dockerfile
     container_name: planner_api
     ports:
-      - '3001:3001'
+      - '3003:3003'
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/planner?schema=public
       - NODE_ENV=development
-      - PORT=3001
+      - PORT=3003
+      - JWT_SECRET=d5e9b963a7d827c7f3b77be9b9cf6f199c071d0e5ba6512b81
+      - JWT_EXPIRES_IN=1h
+      - WEB_API_KEY=4614e919111e0058f87e7eb04fbec2fc4c5883b386ccc96d3ce5ff1d56022ccf82fc50e94775c041e11a516f3ab6bc6a05b0fd13fb4eb79db3887b1f04455743
+      - MOBILE_API_KEY=4abab4e136f1c143e99628213c8395943b50b68f2d1e4906972016b0f309194d08067d946cd6c7eb52d487ae5e463ce829c8c45d920f9974fc7ba72e3dff8945
+      - CORS_ORIGIN=http://localhost:3000,http://localhost:3001
       - SWAGGER_ENABLED=true
       - SWAGGER_TITLE=Planner API
       - SWAGGER_DESCRIPTION=API para gerenciamento de tarefas, materias, eventos e provas

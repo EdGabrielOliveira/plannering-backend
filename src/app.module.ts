@@ -10,12 +10,14 @@ import { AtividadesModule } from './atividades/atividades.module';
 import { NotificacoesModule } from './notificacoes/notificacoes.module';
 import { AuthModule } from './auth/auth.module';
 import { ApiKeysModule } from './api-keys/api-keys.module';
+import { DatabaseModule } from './prisma/prisma.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserIdInterceptor } from './interceptors/UserIdInterceptor';
 import { SecurityLoggerMiddleware } from './middleware/security-logger.middleware';
 
 @Module({
   imports: [
+    DatabaseModule,
     TarefasModule,
     UsuarioModule,
     MateriasModule,
