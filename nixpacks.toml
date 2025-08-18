@@ -1,16 +1,2 @@
 [variables]
 NODE_ENV = "production"
-
-[providers]
-node = "20"
-
-[phases.install]
-dependsOn = ["setup"]
-cmds = ["npm install", "npx prisma generate"]
-
-[phases.build]
-dependsOn = ["install"]
-cmds = ["npm run build"]
-
-[start]
-cmd = "npm run start:prod"
