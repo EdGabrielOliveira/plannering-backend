@@ -8,6 +8,11 @@ export class TarefasService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createTarefaDto: CreateTarefaDto) {
+    // Validar se usuarioId está presente
+    if (!createTarefaDto.usuarioId) {
+      throw new Error('usuarioId é obrigatório');
+    }
+
     const tarefa = await this.prismaService.tarefa.create({
       data: {
         titulo: createTarefaDto.titulo,

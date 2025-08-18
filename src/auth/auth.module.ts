@@ -10,12 +10,18 @@ import { DatabaseModule } from '../prisma/prisma.module';
   imports: [
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '7d' },
+      signOptions: {
+        expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+        issuer: 'planner-api',
+        audience: 'planner-app',
+        algorithm: 'HS256',
+      },
     }),
     DatabaseModule,
     UsuarioModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

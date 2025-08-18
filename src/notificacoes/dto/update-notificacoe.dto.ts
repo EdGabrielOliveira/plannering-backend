@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateNotificacoeDto } from './create-notificacoe.dto';
 import { IsString, IsBoolean } from 'class-validator';
-import { TipoNotificacao } from 'generated/prisma';
+import { TipoNotificacao } from '../../shared/enums';
 
 export class UpdateNotificacoeDto extends PartialType(CreateNotificacoeDto) {
   @IsString()

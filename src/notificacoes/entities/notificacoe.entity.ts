@@ -1,4 +1,4 @@
-import { TipoNotificacao } from 'generated/prisma';
+import { TipoNotificacao } from '../../shared/enums';
 
 export class Notificacoe {
   titulo: string;

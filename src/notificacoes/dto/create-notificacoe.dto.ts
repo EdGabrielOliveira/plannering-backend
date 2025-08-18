@@ -1,5 +1,5 @@
 import { IsBoolean, IsString } from 'class-validator';
-import { TipoNotificacao } from 'generated/prisma';
+import { TipoNotificacao } from '../../shared/enums';
 
 export class CreateNotificacoeDto {
   @IsString()

@@ -13,9 +13,12 @@ import { CreateTarefaDto } from './dto/create-tarefa.dto';
 import { UpdateTarefaDto } from './dto/update-tarefa.dto';
 import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { ApiKeyGuard } from 'src/auth/api-key.guard';
+import { AnyClient } from 'src/decorators/api-key.decorator';
 
 @Controller('tarefas')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, ApiKeyGuard)
+@AnyClient() // Permite acesso tanto do web quanto do mobile
 export class TarefasController {
   constructor(private readonly tarefasService: TarefasService) {}
 

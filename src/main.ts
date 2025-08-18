@@ -2,24 +2,81 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import helmet from 'helmet';
+import { rateLimit } from 'express-rate-limit';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('api');
-  app.enableCors();
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          scriptSrc: ["'self'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+        },
+      },
+      hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true,
+      },
+    }),
+  );
+
+  app.use(
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 50,
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: {
+        error: 'Muitas tentativas. Tente novamente em 15 minutos.',
+      },
+    }),
+  );
+
+  app.use(
+    '/api/auth',
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 5,
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: {
+        error: 'Muitas tentativas de login. Tente novamente em 15 minutos.',
+      },
+    }),
+  );
+
+  app.enableCors({
+    origin: process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(',')
+      : ['http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      disableErrorMessages: process.env.NODE_ENV === 'production',
+      validateCustomDecorators: true,
     }),
   );
+
+  app.setGlobalPrefix('api');
 
   const swaggerEnabled = process.env.SWAGGER_ENABLED === 'true';
   const swaggerPath = process.env.SWAGGER_PATH || 'docs';
 
-  if (swaggerEnabled) {
+  const isProduction = process.env.NODE_ENV === 'production';
+  if (swaggerEnabled && !isProduction) {
     const config = new DocumentBuilder()
       .setTitle(process.env.SWAGGER_TITLE || 'Planner API')
       .setDescription(
@@ -40,4 +97,4 @@ async function bootstrap() {
   await app.listen(port);
 }
 
-bootstrap();
+void bootstrap();

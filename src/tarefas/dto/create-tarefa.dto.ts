@@ -1,27 +1,43 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsString } from 'class-validator';
-import { Prioridade, Status } from 'generated/prisma';
+import {
+  IsDate,
+  IsString,
+  IsEnum,
+  IsUUID,
+  MinLength,
+  MaxLength,
+  IsNotEmpty,
+} from 'class-validator';
+import { Prioridade, Status } from '../../shared/enums';
 
 export class CreateTarefaDto {
-  @IsString()
+  @IsNotEmpty({ message: 'Título é obrigatório' })
+  @IsString({ message: 'Título deve ser uma string' })
+  @MinLength(3, { message: 'Título deve ter pelo menos 3 caracteres' })
+  @MaxLength(200, { message: 'Título deve ter no máximo 200 caracteres' })
   titulo: string;
 
-  @IsString()
+  @IsString({ message: 'Descrição deve ser uma string' })
+  @MaxLength(1000, { message: 'Descrição deve ter no máximo 1000 caracteres' })
   descricao: string;
 
-  @IsString()
+  @IsEnum(Prioridade, {
+    message: 'Prioridade deve ser BAIXA, MEDIA, ALTA ou URGENTE',
+  })
   prioridade: Prioridade;
 
-  @IsString()
+  @IsEnum(Status, {
+    message: 'Status deve ser PENDENTE, EM_ANDAMENTO, CONCLUIDO ou CANCELADO',
+  })
   status: Status;
 
-  @IsString()
+  @IsUUID(4, { message: 'ID da matéria deve ser um UUID válido' })
   materiaId: string;
 
-  @IsDate()
+  @IsDate({ message: 'Data de vencimento deve ser uma data válida' })
   @Type(() => Date)
   dataVencimento: Date;
 
-  @IsString()
+  // usuarioId será automaticamente preenchido pelo interceptor
   usuarioId: string;
 }

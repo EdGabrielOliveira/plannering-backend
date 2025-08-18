@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TarefasModule } from './tarefas/tarefas.module';
@@ -9,8 +9,10 @@ import { ProvasModule } from './provas/provas.module';
 import { AtividadesModule } from './atividades/atividades.module';
 import { NotificacoesModule } from './notificacoes/notificacoes.module';
 import { AuthModule } from './auth/auth.module';
+import { ApiKeysModule } from './api-keys/api-keys.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserIdInterceptor } from './interceptors/UserIdInterceptor';
+import { SecurityLoggerMiddleware } from './middleware/security-logger.middleware';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { UserIdInterceptor } from './interceptors/UserIdInterceptor';
     AtividadesModule,
     NotificacoesModule,
     AuthModule,
+    ApiKeysModule,
   ],
   controllers: [AppController],
   providers: [
@@ -32,4 +35,10 @@ import { UserIdInterceptor } from './interceptors/UserIdInterceptor';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(SecurityLoggerMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

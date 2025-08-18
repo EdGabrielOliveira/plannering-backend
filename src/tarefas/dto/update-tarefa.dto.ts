@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateTarefaDto } from './create-tarefa.dto';
 import { IsString, IsDate } from 'class-validator';
-import { Prioridade, Status } from 'generated/prisma';
+import { Prioridade, Status } from '../../shared/enums';
 import { Type } from 'class-transformer';
 
 export class UpdateTarefaDto extends PartialType(CreateTarefaDto) {

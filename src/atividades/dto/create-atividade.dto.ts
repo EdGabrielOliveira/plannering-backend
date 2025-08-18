@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsDate, IsNumber, IsString } from 'class-validator';
-import { Status } from 'generated/prisma';
+import { Status } from '../../shared/enums';
 
 export class CreateAtividadeDto {
   @IsString()

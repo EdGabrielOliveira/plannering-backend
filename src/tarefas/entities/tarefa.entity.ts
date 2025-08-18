@@ -1,4 +1,4 @@
-import { Prioridade, Status } from 'generated/prisma';
+import { Prioridade, Status } from '../../shared/enums';
 
 export class Tarefa {
   nome: string;

@@ -3,19 +3,38 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class UserIdInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(UserIdInterceptor.name);
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const request = context
-      .switchToHttp()
-      .getRequest<Request & { user?: { sub: string } }>();
-    const userId = request.user?.sub;
+    const request = context.switchToHttp().getRequest<any>();
+
+    if (!request.user) {
+      this.logger.warn('Tentativa de acesso sem usuário autenticado');
+      throw new UnauthorizedException('Usuário não autenticado');
+    }
+
+    const userId = request.user.id;
 
     if (['POST', 'PUT', 'PATCH'].includes(request.method) && userId) {
-      (request.body as Record<string, any>).usuarioId = userId;
+      if (request.body && typeof request.body === 'object') {
+        if (request.body.usuarioId && request.body.usuarioId !== userId) {
+          this.logger.warn(
+            `Tentativa de modificar dados de outro usuário: ${request.user.email}`,
+          );
+          throw new UnauthorizedException(
+            'Não é possível modificar dados de outro usuário',
+          );
+        }
+
+        request.body.usuarioId = userId;
+      }
     }
 
     return next.handle();

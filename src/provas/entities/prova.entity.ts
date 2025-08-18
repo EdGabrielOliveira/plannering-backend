@@ -1,4 +1,4 @@
-import { Status } from 'generated/prisma';
+import { Status } from '../../shared/enums';
 
 export class Prova {
   titulo: string;

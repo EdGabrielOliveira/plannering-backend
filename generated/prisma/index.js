@@ -238,7 +238,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Gabriel Oliveira\\Projetos\\Planner\\planner-backend\\generated\\prisma",
+      "value": "C:\\Users\\Gabriel Oliveira\\Projetos\\Plannering\\planner-backend\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -252,7 +252,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Gabriel Oliveira\\Projetos\\Planner\\planner-backend\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Gabriel Oliveira\\Projetos\\Plannering\\planner-backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

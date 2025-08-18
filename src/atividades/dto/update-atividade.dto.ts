@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateAtividadeDto } from './create-atividade.dto';
 import { IsDate, IsNumber, IsString } from 'class-validator';
-import { Status } from 'generated/prisma';
+import { Status } from '../../shared/enums';
 import { Type } from 'class-transformer';
 
 export class UpdateAtividadeDto extends PartialType(CreateAtividadeDto) {
