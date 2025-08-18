@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 console.log('🚀 Iniciando aplicação Planner Backend...');
 
@@ -10,6 +11,24 @@ if (!process.env.DATABASE_URL) {
 }
 
 console.log('✅ DATABASE_URL configurada');
+
+// Verifica se o arquivo dist/main.js existe
+const mainJsPath = path.join(__dirname, '..', 'dist', 'main.js');
+console.log('🔍 Verificando arquivo:', mainJsPath);
+
+if (!fs.existsSync(mainJsPath)) {
+  console.error('❌ Erro: Arquivo dist/main.js não encontrado!');
+  console.log('📁 Conteúdo do diretório dist:');
+  const distPath = path.join(__dirname, '..', 'dist');
+  if (fs.existsSync(distPath)) {
+    console.log(fs.readdirSync(distPath));
+  } else {
+    console.log('❌ Diretório dist não existe!');
+  }
+  process.exit(1);
+}
+
+console.log('✅ Arquivo dist/main.js encontrado');
 
 // Função para executar comando
 function runCommand(command, args, options = {}) {
@@ -50,7 +69,7 @@ async function start() {
 
     // Inicia a aplicação
     console.log('🎯 Iniciando servidor...');
-    await runCommand('node', [path.join(__dirname, '..', 'dist', 'main.js')]);
+    await runCommand('node', [mainJsPath]);
   } catch (error) {
     console.error('❌ Erro ao iniciar aplicação:', error.message);
     process.exit(1);
