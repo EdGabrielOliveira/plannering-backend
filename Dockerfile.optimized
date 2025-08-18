@@ -1,16 +1,12 @@
-# Dockerfile otimizado para reduzir espaço
 FROM node:22-alpine AS base
 
-# Instalar dependências básicas
 RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-# Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
 
-# Instalar dependências de produção apenas
 ENV NODE_ENV=production
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 ENV NPM_CONFIG_FUND=false
@@ -20,32 +16,28 @@ RUN npm ci --omit=dev --no-audit --no-fund && \
     npx prisma generate && \
     npm cache clean --force
 
-# Build stage
 FROM base AS builder
 
-# Instalar devDependencies para build
 RUN npm ci --no-audit --no-fund
 
-# Copiar código fonte
 COPY . .
 
-# Build da aplicação
 RUN npm run build
 
-# Produção final
 FROM node:22-alpine AS production
 
 RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-# Copiar node_modules e build
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY package.json ./
+COPY start-debug.sh ./
 
-# Criar usuário não-root
+RUN chmod +x start-debug.sh
+
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nestjs -u 1001
 
@@ -53,4 +45,4 @@ USER nestjs
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start:prod"]
+CMD ["./start-debug.sh"]
