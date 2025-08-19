@@ -80,12 +80,12 @@ RUN echo '#!/bin/sh' > start.sh && \
     echo 'echo "Running Prisma migrations..."' >> start.sh && \
     echo 'npx prisma migrate deploy' >> start.sh && \
     echo 'echo "Starting NestJS application..."' >> start.sh && \
-    echo 'if [ -f "dist/main.js" ]; then' >> start.sh && \
-    echo '  echo "✅ Found main.js at dist/main.js"' >> start.sh && \
-    echo '  exec node dist/main.js' >> start.sh && \
-    echo 'elif [ -f "dist/src/main.js" ]; then' >> start.sh && \
+    echo 'if [ -f "dist/src/main.js" ]; then' >> start.sh && \
     echo '  echo "✅ Found main.js at dist/src/main.js"' >> start.sh && \
     echo '  exec node dist/src/main.js' >> start.sh && \
+    echo 'elif [ -f "dist/main.js" ]; then' >> start.sh && \
+    echo '  echo "✅ Found main.js at dist/main.js"' >> start.sh && \
+    echo '  exec node dist/main.js' >> start.sh && \
     echo 'else' >> start.sh && \
     echo '  echo "❌ main.js not found! Build structure:"' >> start.sh && \
     echo '  find . -name "*.js" | head -20' >> start.sh && \
