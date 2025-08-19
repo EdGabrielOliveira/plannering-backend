@@ -1,10 +1,10 @@
-# Dependencies
+# Dependencies (mais importante - reduz muito o contexto)
 node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build outputs
+# Build outputs (serão gerados no container)
 dist
 .next
 .nuxt
@@ -14,6 +14,7 @@ out
 generated/
 *.dll.node
 query_engine-*
+.prisma/
 
 # Environment files
 .env.local
@@ -31,22 +32,23 @@ query_engine-*
 .DS_Store
 Thumbs.db
 
-# Git
+# Git (reduz contexto significativamente)
 .git
 .gitignore
 
-# Documentation
+# Documentation (não necessário em produção)
 README.md
 docs
+*.md
 
-# Testing
+# Testing (não necessário em produção)
 coverage
 .nyc_output
 test
 *.test.ts
 *.spec.ts
 
-# Development
+# Development (não necessário em produção)
 .eslintrc*
 .prettierrc*
 jest.config.*
@@ -64,14 +66,12 @@ docker-compose.*
 .seed
 .pid.lock
 
-# Optional npm cache directory
+# Cache directories
 .npm
+.cache
+*.tmp
+*.temp
 
 # Bun files (para desenvolvimento, não precisamos em produção)
 bun.lock
 .bun
-
-# Cache e arquivos temporários
-.cache
-*.tmp
-*.temp
