@@ -1,0 +1,79 @@
+# Dockerfile simplificado para garantir estrutura correta
+FROM node:22-alpine AS base
+
+RUN apk add --no-cache openssl
+
+WORKDIR /app
+
+# Copiar arquivos essenciais
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Instalar dependências de produção
+ENV NODE_ENV=production
+RUN npm ci --omit=dev --no-audit --no-fund && \
+    npx prisma generate && \
+    npm cache clean --force
+
+# Stage de build
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+RUN apk add --no-cache openssl
+
+# Copiar arquivos de configuração
+COPY package*.json ./
+COPY tsconfig*.json ./
+COPY nest-cli.json ./
+COPY prisma ./prisma/
+
+# Instalar todas as dependências para build
+RUN npm ci --no-audit --no-fund
+
+# Copiar código fonte
+COPY src ./src/
+
+# Build com debug
+RUN npm run build && \
+    echo "=== Build Output ===" && \
+    find dist -name "*.js" | head -10 && \
+    ls -la dist/ && \
+    echo "=== Looking for main.js ===" && \
+    find . -name "main.js" -type f
+
+# Stage final
+FROM base AS production
+
+WORKDIR /app
+
+# Copiar build e dependências
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/prisma ./prisma
+
+# Script de início inteligente
+RUN echo '#!/bin/sh' > start.sh && \
+    echo 'echo "=== Starting Application ==="' >> start.sh && \
+    echo 'find . -name "main.js" -type f' >> start.sh && \
+    echo 'if [ -f "dist/main.js" ]; then' >> start.sh && \
+    echo '  echo "Using dist/main.js"' >> start.sh && \
+    echo '  exec node dist/main.js' >> start.sh && \
+    echo 'elif [ -f "dist/src/main.js" ]; then' >> start.sh && \
+    echo '  echo "Using dist/src/main.js"' >> start.sh && \
+    echo '  exec node dist/src/main.js' >> start.sh && \
+    echo 'else' >> start.sh && \
+    echo '  echo "ERROR: main.js not found!"' >> start.sh && \
+    echo '  find . -name "*.js" | head -10' >> start.sh && \
+    echo '  exit 1' >> start.sh && \
+    echo 'fi' >> start.sh && \
+    chmod +x start.sh
+
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nestjs -u 1001
+
+USER nestjs
+
+EXPOSE 3000
+
+CMD ["./start.sh"]
