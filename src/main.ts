@@ -8,6 +8,14 @@ import { rateLimit } from 'express-rate-limit';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Configurar trust proxy para Heroku
+  if (process.env.NODE_ENV === 'production') {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const expressApp = app.getHttpAdapter().getInstance();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    expressApp.set('trust proxy', 1);
+  }
+
   app.use(
     helmet({
       contentSecurityPolicy: {
