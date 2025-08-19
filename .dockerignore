@@ -10,6 +10,11 @@ dist
 .nuxt
 out
 
+# Prisma generated files (reduzir tamanho do contexto)
+generated/
+*.dll.node
+query_engine-*
+
 # Environment files
 .env.local
 .env.development.local
@@ -62,6 +67,11 @@ docker-compose.*
 # Optional npm cache directory
 .npm
 
-# Bun files (não precisamos mais)
+# Bun files (para desenvolvimento, não precisamos em produção)
 bun.lock
 .bun
+
+# Cache e arquivos temporários
+.cache
+*.tmp
+*.temp
