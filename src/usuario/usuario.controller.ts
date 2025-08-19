@@ -7,16 +7,18 @@ import {
   Patch,
   Get,
   UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 
 import { UsuarioService } from './usuario.service';
 import { AtualizarUsuarioDTO } from './dto/update-usuario.dto';
 
 import { CriarUsuarioDTO } from './dto/create-usuario.dto';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 
 @Controller('usuarios')
-@UseGuards(JwtAuthGuard)
+@UseGuards(ApiKeyGuard)
+@SetMetadata(API_KEY_TYPES, [ApiKeyType.ANY])
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 

@@ -15,6 +15,12 @@ export class UserIdInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<any>();
 
+    // Se está usando API Key, pular a validação de usuário
+    if (request.clientType) {
+      return next.handle();
+    }
+
+    // Só validar usuário se for autenticação JWT
     if (!request.user) {
       this.logger.warn('Tentativa de acesso sem usuário autenticado');
       throw new UnauthorizedException('Usuário não autenticado');

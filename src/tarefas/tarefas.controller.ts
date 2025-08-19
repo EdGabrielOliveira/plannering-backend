@@ -7,18 +7,17 @@ import {
   Param,
   Delete,
   UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { TarefasService } from './tarefas.service';
 import { CreateTarefaDto } from './dto/create-tarefa.dto';
 import { UpdateTarefaDto } from './dto/update-tarefa.dto';
 import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
-import { ApiKeyGuard } from 'src/auth/api-key.guard';
-import { AnyClient } from 'src/decorators/api-key.decorator';
+import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 
 @Controller('tarefas')
-@UseGuards(JwtAuthGuard, ApiKeyGuard)
-@AnyClient() // Permite acesso tanto do web quanto do mobile
+@UseGuards(ApiKeyGuard)
+@SetMetadata(API_KEY_TYPES, [ApiKeyType.ANY])
 export class TarefasController {
   constructor(private readonly tarefasService: TarefasService) {}
 

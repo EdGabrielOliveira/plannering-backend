@@ -7,15 +7,17 @@ import {
   Param,
   Delete,
   UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { MateriasService } from './materias.service';
 import { CreateMateriaDto } from './dto/create-materia.dto';
 import { UpdateMateriaDto } from './dto/update-materia.dto';
 import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 
 @Controller('materias')
-@UseGuards(JwtAuthGuard)
+@UseGuards(ApiKeyGuard)
+@SetMetadata(API_KEY_TYPES, [ApiKeyType.ANY])
 export class MateriasController {
   constructor(private readonly materiasService: MateriasService) {}
 

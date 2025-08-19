@@ -7,15 +7,17 @@ import {
   Param,
   Delete,
   UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { NotificacoesService } from './notificacoes.service';
 import { CreateNotificacoeDto } from './dto/create-notificacoe.dto';
 import { UpdateNotificacoeDto } from './dto/update-notificacoe.dto';
 import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 
 @Controller('notificacoes')
-@UseGuards(JwtAuthGuard)
+@UseGuards(ApiKeyGuard)
+@SetMetadata(API_KEY_TYPES, [ApiKeyType.ANY])
 export class NotificacoesController {
   constructor(private readonly notificacoesService: NotificacoesService) {}
 

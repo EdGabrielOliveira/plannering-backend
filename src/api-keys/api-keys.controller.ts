@@ -5,22 +5,20 @@ import {
   Body,
   UseGuards,
   Request,
+  SetMetadata,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.guard';
-import { ApiKeyGuard } from '../auth/api-key.guard';
-import {
-  RequireApiKey,
-  WebOnly,
-  MobileOnly,
-} from '../decorators/api-key.decorator';
-import { ApiKeyType } from '../auth/api-key.guard';
+import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
+
+interface RequestWithClient extends Request {
+  clientType: string;
+}
 
 @Controller('api-keys')
-@UseGuards(JwtAuthGuard, ApiKeyGuard)
+@UseGuards(ApiKeyGuard)
+@SetMetadata(API_KEY_TYPES, [ApiKeyType.ANY])
 export class ApiKeysController {
   @Get('info')
-  @RequireApiKey([ApiKeyType.ANY])
-  getApiKeyInfo(@Request() req: any) {
+  getApiKeyInfo(@Request() req: RequestWithClient) {
     return {
       clientType: req.clientType,
       timestamp: new Date().toISOString(),
@@ -29,7 +27,7 @@ export class ApiKeysController {
   }
 
   @Get('web-only')
-  @WebOnly()
+  @SetMetadata(API_KEY_TYPES, [ApiKeyType.WEB])
   getWebOnlyData() {
     return {
       message: 'Este endpoint está disponível apenas para o cliente web',
@@ -44,7 +42,7 @@ export class ApiKeysController {
   }
 
   @Get('mobile-only')
-  @MobileOnly()
+  @SetMetadata(API_KEY_TYPES, [ApiKeyType.MOBILE])
   getMobileOnlyData() {
     return {
       message: 'Este endpoint está disponível apenas para o app mobile',
@@ -55,8 +53,10 @@ export class ApiKeysController {
   }
 
   @Post('validate')
-  @RequireApiKey([ApiKeyType.ANY])
-  validateApiKey(@Request() req: any, @Body() body: { test?: string }) {
+  validateApiKey(
+    @Request() req: RequestWithClient,
+    @Body() body: { test?: string },
+  ) {
     return {
       valid: true,
       clientType: req.clientType,
@@ -66,8 +66,7 @@ export class ApiKeysController {
   }
 
   @Get('status')
-  @RequireApiKey([ApiKeyType.ANY])
-  getStatus(@Request() req: any) {
+  getStatus(@Request() req: RequestWithClient) {
     const isWeb = req.clientType === 'WEB';
     const isMobile = req.clientType === 'MOBILE';
 
