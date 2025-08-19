@@ -67,31 +67,13 @@ COPY --from=dependencies /app/package.json ./package.json
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
+# Copiar script de start
+COPY start.sh ./start.sh
+RUN chmod +x start.sh
+
 # Criar usuário não-root
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nestjs -u 1001
-
-# Script de start inteligente
-RUN echo '#!/bin/sh' > start.sh && \
-    echo 'echo "=== DOKPLOY PRODUCTION START ==="' >> start.sh && \
-    echo 'echo "Working directory: $(pwd)"' >> start.sh && \
-    echo 'echo "Available files:"' >> start.sh && \
-    echo 'find . -name "*.js" | head -5' >> start.sh && \
-    echo 'echo "Running Prisma migrations..."' >> start.sh && \
-    echo 'npx prisma migrate deploy' >> start.sh && \
-    echo 'echo "Starting NestJS application..."' >> start.sh && \
-    echo 'if [ -f "dist/main.js" ]; then' >> start.sh && \
-    echo '  echo "✅ Found main.js at dist/main.js"' >> start.sh && \
-    echo '  exec node dist/main.js' >> start.sh && \
-    echo 'elif [ -f "dist/src/main.js" ]; then' >> start.sh && \
-    echo '  echo "✅ Found main.js at dist/src/main.js"' >> start.sh && \
-    echo '  exec node dist/src/main.js' >> start.sh && \
-    echo 'else' >> start.sh && \
-    echo '  echo "❌ main.js not found! Build structure:"' >> start.sh && \
-    echo '  find . -name "*.js" | head -20' >> start.sh && \
-    echo '  exit 1' >> start.sh && \
-    echo 'fi' >> start.sh && \
-    chmod +x start.sh
 
 # Dar permissão para o usuário
 RUN chown -R nestjs:nodejs /app
