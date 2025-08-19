@@ -16,7 +16,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "npx prisma migrate deploy && node dist/main.js",
+    "start:prod": "npx prisma migrate deploy && if exist dist/main.js (node dist/main.js) else if exist dist/src/main.js (node dist/src/main.js) else (echo main.js not found! && dir dist && exit /b 1)",
     "migrate:deploy": "npx prisma migrate deploy",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
