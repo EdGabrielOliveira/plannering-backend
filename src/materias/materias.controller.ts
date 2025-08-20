@@ -22,8 +22,11 @@ export class MateriasController {
   constructor(private readonly materiasService: MateriasService) {}
 
   @Post()
-  create(@GetCurrentUserId() @Body() createMateriaDto: CreateMateriaDto) {
-    return this.materiasService.create(createMateriaDto);
+  create(
+    @GetCurrentUserId() usuarioId: string,
+    @Body() createMateriaDto: CreateMateriaDto,
+  ) {
+    return this.materiasService.create({ ...createMateriaDto, usuarioId });
   }
 
   @Get()

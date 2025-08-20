@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateMateriaDto {
   @IsString()
@@ -7,8 +7,9 @@ export class CreateMateriaDto {
   @IsString()
   descricao: string;
 
+  @IsOptional()
   @IsString()
-  usuarioId: string;
+  usuarioId?: string;
 
   @IsString()
   cor: string;

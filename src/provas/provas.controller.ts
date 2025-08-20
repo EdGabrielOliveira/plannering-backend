@@ -22,8 +22,11 @@ export class ProvasController {
   constructor(private readonly provasService: ProvasService) {}
 
   @Post()
-  create(@GetCurrentUserId() @Body() createProvaDto: CreateProvaDto) {
-    return this.provasService.create(createProvaDto);
+  create(
+    @GetCurrentUserId() usuarioId: string,
+    @Body() createProvaDto: CreateProvaDto,
+  ) {
+    return this.provasService.create({ ...createProvaDto, usuarioId });
   }
 
   @Get()

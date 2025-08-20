@@ -7,6 +7,7 @@ import {
   MinLength,
   MaxLength,
   IsNotEmpty,
+  IsOptional,
 } from 'class-validator';
 import { Prioridade, Status } from '../../shared/enums';
 
@@ -38,6 +39,8 @@ export class CreateTarefaDto {
   @Type(() => Date)
   dataVencimento: Date;
 
-  // usuarioId será automaticamente preenchido pelo interceptor
-  usuarioId: string;
+  // usuarioId será automaticamente preenchido pelo controller
+  @IsOptional()
+  @IsString()
+  usuarioId?: string;
 }

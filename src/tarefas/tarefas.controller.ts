@@ -22,8 +22,11 @@ export class TarefasController {
   constructor(private readonly tarefasService: TarefasService) {}
 
   @Post()
-  create(@GetCurrentUserId() @Body() createTarefaDto: CreateTarefaDto) {
-    return this.tarefasService.create(createTarefaDto);
+  create(
+    @GetCurrentUserId() usuarioId: string,
+    @Body() createTarefaDto: CreateTarefaDto,
+  ) {
+    return this.tarefasService.create({ ...createTarefaDto, usuarioId });
   }
 
   @Get()

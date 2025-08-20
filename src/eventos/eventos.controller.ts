@@ -22,8 +22,11 @@ export class EventosController {
   constructor(private readonly eventosService: EventosService) {}
 
   @Post()
-  create(@GetCurrentUserId() @Body() createEventoDto: CreateEventoDto) {
-    return this.eventosService.create(createEventoDto);
+  create(
+    @GetCurrentUserId() usuarioId: string,
+    @Body() createEventoDto: CreateEventoDto,
+  ) {
+    return this.eventosService.create({ ...createEventoDto, usuarioId });
   }
 
   @Get()

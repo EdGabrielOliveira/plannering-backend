@@ -1,4 +1,4 @@
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { TipoNotificacao } from '../../shared/enums';
 
 export class CreateNotificacoeDto {
@@ -14,6 +14,7 @@ export class CreateNotificacoeDto {
   @IsBoolean()
   lido: boolean;
 
+  @IsOptional()
   @IsString()
-  usuarioId: string;
+  usuarioId?: string;
 }

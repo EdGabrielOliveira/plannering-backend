@@ -22,8 +22,11 @@ export class AtividadesController {
   constructor(private readonly atividadesService: AtividadesService) {}
 
   @Post()
-  create(@GetCurrentUserId() @Body() createAtividadeDto: CreateAtividadeDto) {
-    return this.atividadesService.create(createAtividadeDto);
+  create(
+    @GetCurrentUserId() usuarioId: string,
+    @Body() createAtividadeDto: CreateAtividadeDto,
+  ) {
+    return this.atividadesService.create({ ...createAtividadeDto, usuarioId });
   }
 
   @Get()

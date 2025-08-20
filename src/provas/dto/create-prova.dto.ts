@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Status } from '../../shared/enums';
 
 export class CreateProvaDto {
@@ -19,8 +19,9 @@ export class CreateProvaDto {
   @IsString()
   materiaId: string;
 
+  @IsOptional()
   @IsString()
-  usuarioId: string;
+  usuarioId?: string;
 
   @IsString()
   local: string;

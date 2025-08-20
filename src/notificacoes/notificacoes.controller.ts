@@ -23,11 +23,13 @@ export class NotificacoesController {
 
   @Post()
   create(
-    @GetCurrentUserId()
-    @Body()
-    createNotificacoeDto: CreateNotificacoeDto,
+    @GetCurrentUserId() usuarioId: string,
+    @Body() createNotificacoeDto: CreateNotificacoeDto,
   ) {
-    return this.notificacoesService.create(createNotificacoeDto);
+    return this.notificacoesService.create({
+      ...createNotificacoeDto,
+      usuarioId,
+    });
   }
 
   @Get()

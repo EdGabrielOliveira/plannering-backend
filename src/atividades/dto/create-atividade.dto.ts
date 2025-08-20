@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Status } from '../../shared/enums';
 
 export class CreateAtividadeDto {
@@ -12,8 +12,9 @@ export class CreateAtividadeDto {
   @IsString()
   materiaId: string;
 
+  @IsOptional()
   @IsString()
-  usuarioId: string;
+  usuarioId?: string;
 
   @IsDate()
   @Type(() => Date)

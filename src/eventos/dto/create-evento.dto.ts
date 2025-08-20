@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsDate, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsOptional, IsString } from 'class-validator';
 
 export class CreateEventoDto {
   @IsString()
@@ -25,6 +25,7 @@ export class CreateEventoDto {
   @IsString()
   cor: string;
 
+  @IsOptional()
   @IsString()
-  usuarioId: string;
+  usuarioId?: string;
 }
