@@ -8,7 +8,6 @@ import { rateLimit } from 'express-rate-limit';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Configurar trust proxy para Heroku
   if (process.env.NODE_ENV === 'production') {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const expressApp = app.getHttpAdapter().getInstance();
@@ -79,8 +78,6 @@ async function bootstrap() {
       validateCustomDecorators: true,
     }),
   );
-
-  app.setGlobalPrefix('api');
 
   const swaggerEnabled = process.env.SWAGGER_ENABLED === 'true';
   const swaggerPath = process.env.SWAGGER_PATH || 'docs';
