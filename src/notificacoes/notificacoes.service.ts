@@ -8,6 +8,10 @@ export class NotificacoesService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createNotificacoeDto: CreateNotificacoeDto) {
+    if (!createNotificacoeDto.usuarioId) {
+      throw new Error('Usuario ID é obrigatório');
+    }
+
     const notificacoes = await this.prismaService.notificacao.create({
       data: {
         titulo: createNotificacoeDto.titulo,

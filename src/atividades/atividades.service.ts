@@ -8,6 +8,10 @@ export class AtividadesService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createAtividadeDto: CreateAtividadeDto) {
+    if (!createAtividadeDto.usuarioId) {
+      throw new Error('Usuario ID é obrigatório');
+    }
+
     const atividade = await this.prismaService.atividade.create({
       data: {
         titulo: createAtividadeDto.titulo,

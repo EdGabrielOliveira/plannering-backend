@@ -8,6 +8,10 @@ export class ProvasService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createProvaDto: CreateProvaDto) {
+    if (!createProvaDto.usuarioId) {
+      throw new Error('Usuario ID é obrigatório');
+    }
+
     const prova = await this.prismaService.prova.create({
       data: {
         titulo: createProvaDto.titulo,

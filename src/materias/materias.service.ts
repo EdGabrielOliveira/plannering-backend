@@ -8,6 +8,10 @@ export class MateriasService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createMateriaDto: CreateMateriaDto) {
+    if (!createMateriaDto.usuarioId) {
+      throw new Error('Usuario ID é obrigatório');
+    }
+
     const materia = await this.prismaService.materia.create({
       data: {
         nome: createMateriaDto.nome,

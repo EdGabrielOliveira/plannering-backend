@@ -8,6 +8,10 @@ export class EventosService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createEventoDto: CreateEventoDto) {
+    if (!createEventoDto.usuarioId) {
+      throw new Error('Usuario ID é obrigatório');
+    }
+
     const evento = await this.prismaService.evento.create({
       data: {
         titulo: createEventoDto.titulo,
