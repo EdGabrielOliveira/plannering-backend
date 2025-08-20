@@ -14,9 +14,10 @@ import { CreateNotificacoeDto } from './dto/create-notificacoe.dto';
 import { UpdateNotificacoeDto } from './dto/update-notificacoe.dto';
 import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
 import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 
 @Controller('notificacoes')
-@UseGuards(ApiKeyGuard)
+@UseGuards(ApiKeyGuard, JwtAuthGuard)
 @SetMetadata(API_KEY_TYPES, [ApiKeyType.ANY])
 export class NotificacoesController {
   constructor(private readonly notificacoesService: NotificacoesService) {}

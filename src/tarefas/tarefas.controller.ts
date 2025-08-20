@@ -14,9 +14,10 @@ import { CreateTarefaDto } from './dto/create-tarefa.dto';
 import { UpdateTarefaDto } from './dto/update-tarefa.dto';
 import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
 import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 
 @Controller('tarefas')
-@UseGuards(ApiKeyGuard)
+@UseGuards(ApiKeyGuard, JwtAuthGuard)
 @SetMetadata(API_KEY_TYPES, [ApiKeyType.ANY])
 export class TarefasController {
   constructor(private readonly tarefasService: TarefasService) {}

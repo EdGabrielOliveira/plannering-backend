@@ -14,9 +14,10 @@ import { CreateMateriaDto } from './dto/create-materia.dto';
 import { UpdateMateriaDto } from './dto/update-materia.dto';
 import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
 import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 
 @Controller('materias')
-@UseGuards(ApiKeyGuard)
+@UseGuards(ApiKeyGuard, JwtAuthGuard)
 @SetMetadata(API_KEY_TYPES, [ApiKeyType.ANY])
 export class MateriasController {
   constructor(private readonly materiasService: MateriasService) {}
