@@ -3,9 +3,11 @@ import {
   UnauthorizedException,
   ConflictException,
   Logger,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -48,14 +50,10 @@ export class AuthService {
 
       this.logger.log(`Novo usuário registrado: ${user.email}`);
 
-      const payload = {
-        sub: user.id,
-        email: user.email,
-        iat: Math.floor(Date.now() / 1000),
-      };
+      const tokens = await this.generateTokens(user.id, user.email);
 
       return {
-        access_token: this.jwt.sign(payload),
+        ...tokens,
         user: {
           id: user.id,
           nome: user.nome,
@@ -84,14 +82,10 @@ export class AuthService {
 
     this.logger.log(`Login bem-sucedido para usuário: ${user.email}`);
 
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      iat: Math.floor(Date.now() / 1000),
-    };
+    const tokens = await this.generateTokens(user.id, user.email);
 
     return {
-      access_token: this.jwt.sign(payload),
+      ...tokens,
       user: {
         id: user.id,
         nome: user.nome,
@@ -105,5 +99,100 @@ export class AuthService {
     const strongPasswordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return strongPasswordRegex.test(password);
+  }
+
+  private async generateTokens(userId: string, email: string) {
+    const payload = {
+      sub: userId,
+      email: email,
+      iat: Math.floor(Date.now() / 1000),
+    };
+
+    const accessToken = this.jwt.sign(payload);
+    const refreshToken = this.generateRefreshToken();
+
+    // Salvar o refresh token no banco com expiração de 30 dias
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 30);
+
+    // Invalidar refresh tokens existentes do usuário
+    await this.prisma
+      .$executeRaw`DELETE FROM refresh_tokens WHERE usuario_id = ${userId}`;
+
+    // Criar novo refresh token
+    await this.prisma.$executeRaw`
+      INSERT INTO refresh_tokens (id, token, usuario_id, expires_at, created_at, updated_at)
+      VALUES (gen_random_uuid(), ${refreshToken}, ${userId}, ${expiresAt}, NOW(), NOW())
+    `;
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    };
+  }
+
+  private generateRefreshToken(): string {
+    return crypto.randomBytes(64).toString('hex');
+  }
+
+  async refreshTokens(refreshToken: string) {
+    // Buscar token com SQL puro
+    const tokenRecords = await this.prisma.$queryRaw<
+      Array<{
+        token: string;
+        expires_at: Date;
+        usuario_id: string;
+        nome: string;
+        email: string;
+      }>
+    >`
+      SELECT rt.token, rt.expires_at, rt.usuario_id, u.nome, u.email
+      FROM refresh_tokens rt
+      JOIN usuarios u ON rt.usuario_id = u.id
+      WHERE rt.token = ${refreshToken}
+      LIMIT 1
+    `;
+
+    if (!tokenRecords || tokenRecords.length === 0) {
+      throw new UnauthorizedException('Refresh token inválido');
+    }
+
+    const tokenRecord = tokenRecords[0];
+
+    if (tokenRecord.expires_at < new Date()) {
+      await this.prisma
+        .$executeRaw`DELETE FROM refresh_tokens WHERE token = ${refreshToken}`;
+      throw new UnauthorizedException('Refresh token expirado');
+    }
+
+    const tokens = await this.generateTokens(
+      tokenRecord.usuario_id,
+      tokenRecord.email,
+    );
+
+    this.logger.log(`Tokens renovados para usuário: ${tokenRecord.email}`);
+
+    return {
+      ...tokens,
+      user: {
+        id: tokenRecord.usuario_id,
+        nome: tokenRecord.nome,
+        email: tokenRecord.email,
+      },
+    };
+  }
+
+  async revokeRefreshToken(refreshToken: string) {
+    await this.prisma
+      .$executeRaw`DELETE FROM refresh_tokens WHERE token = ${refreshToken}`;
+    this.logger.log('Refresh token revogado');
+  }
+
+  async revokeAllUserTokens(userId: string) {
+    await this.prisma
+      .$executeRaw`DELETE FROM refresh_tokens WHERE usuario_id = ${userId}`;
+    this.logger.log(
+      `Todos os refresh tokens do usuário ${userId} foram revogados`,
+    );
   }
 }
