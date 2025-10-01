@@ -32,7 +32,7 @@ export class UsuarioController {
     @Param('id') id: string,
     @Body() AtualizarUsuarioDto: AtualizarUsuarioDTO,
   ): Promise<any> {
-    return await this.atualizar(id, AtualizarUsuarioDto);
+    return await this.usuarioService.update(id, AtualizarUsuarioDto);
   }
 
   @Delete(':id')
@@ -47,6 +47,6 @@ export class UsuarioController {
 
   @Get()
   buscarTodos() {
-    return this.usuarioService.finfdAll();
+    return this.usuarioService.findAll();
   }
 }

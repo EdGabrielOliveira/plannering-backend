@@ -3,8 +3,13 @@ import { IsString, IsEmail, IsOptional, Length } from 'class-validator';
 export class AtualizarUsuarioDTO {
   @IsOptional()
   @IsString()
-  @Length(3, 100)
+  @Length(2, 20)
   nome?: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(2, 20)
+  sobrenome?: string;
 
   @IsOptional()
   @IsEmail()

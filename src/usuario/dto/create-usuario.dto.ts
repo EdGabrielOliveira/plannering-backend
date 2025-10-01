@@ -2,8 +2,12 @@ import { IsString, IsEmail, IsOptional, Length } from 'class-validator';
 
 export class CriarUsuarioDTO {
   @IsString()
-  @Length(3, 100)
+  @Length(2, 20)
   nome: string;
+
+  @IsString()
+  @Length(2, 20)
+  sobrenome: string;
 
   @IsEmail()
   email: string;
@@ -15,5 +19,4 @@ export class CriarUsuarioDTO {
   @IsString()
   @Length(6, 20)
   senha: string;
-  usuario: any;
 }

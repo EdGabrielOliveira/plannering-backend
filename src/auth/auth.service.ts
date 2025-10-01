@@ -43,6 +43,7 @@ export class AuthService {
       const user = await this.prisma.usuario.create({
         data: {
           nome: dto.nome.trim(),
+          sobrenome: dto.sobrenome.trim(),
           email: dto.email.toLowerCase().trim(),
           senha: hash,
         },
@@ -60,7 +61,7 @@ export class AuthService {
           email: user.email,
         },
       };
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Erro ao registrar usuário: ${error.message}`);
       throw new ConflictException('Erro ao criar usuário');
     }

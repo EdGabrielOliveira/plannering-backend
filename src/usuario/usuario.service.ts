@@ -12,6 +12,7 @@ export class UsuarioService {
     const usuario = await this.prismaService.usuario.create({
       data: {
         nome: CriarUsuarioDTO.nome,
+        sobrenome: CriarUsuarioDTO.sobrenome,
         email: CriarUsuarioDTO.email,
         senha: CriarUsuarioDTO.senha,
         telefone: CriarUsuarioDTO.telefone,
@@ -21,7 +22,7 @@ export class UsuarioService {
     return usuario;
   }
 
-  finfdAll() {
+  findAll() {
     return this.prismaService.usuario.findMany({
       include: {
         atividades: true,
