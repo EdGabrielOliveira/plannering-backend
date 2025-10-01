@@ -3,7 +3,6 @@ import {
   UnauthorizedException,
   ConflictException,
   Logger,
-  ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -62,6 +61,7 @@ export class AuthService {
         },
       };
     } catch (error: any) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       this.logger.error(`Erro ao registrar usuário: ${error.message}`);
       throw new ConflictException('Erro ao criar usuário');
     }
@@ -96,7 +96,6 @@ export class AuthService {
   }
 
   private isPasswordStrong(password: string): boolean {
-    // Pelo menos 8 caracteres, 1 maiúscula, 1 minúscula, 1 número, 1 especial
     const strongPasswordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return strongPasswordRegex.test(password);
@@ -112,15 +111,12 @@ export class AuthService {
     const accessToken = this.jwt.sign(payload);
     const refreshToken = this.generateRefreshToken();
 
-    // Salvar o refresh token no banco com expiração de 30 dias
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 30);
 
-    // Invalidar refresh tokens existentes do usuário
     await this.prisma
       .$executeRaw`DELETE FROM refresh_tokens WHERE usuario_id = ${userId}`;
 
-    // Criar novo refresh token
     await this.prisma.$executeRaw`
       INSERT INTO refresh_tokens (id, token, usuario_id, expires_at, created_at, updated_at)
       VALUES (gen_random_uuid(), ${refreshToken}, ${userId}, ${expiresAt}, NOW(), NOW())
@@ -137,7 +133,6 @@ export class AuthService {
   }
 
   async refreshTokens(refreshToken: string) {
-    // Buscar token com SQL puro
     const tokenRecords = await this.prisma.$queryRaw<
       Array<{
         token: string;
