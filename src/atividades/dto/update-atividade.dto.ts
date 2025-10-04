@@ -22,9 +22,6 @@ export class UpdateAtividadeDto extends PartialType(CreateAtividadeDto) {
   dataVencimento: Date;
 
   @IsNumber()
-  peso: number;
-
-  @IsNumber()
   nota: number;
 
   @IsString()

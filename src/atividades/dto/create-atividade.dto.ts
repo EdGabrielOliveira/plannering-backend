@@ -21,9 +21,6 @@ export class CreateAtividadeDto {
   dataVencimento: Date;
 
   @IsNumber()
-  peso: number;
-
-  @IsNumber()
   nota: number;
 
   @IsString()

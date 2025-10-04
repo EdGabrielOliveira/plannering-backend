@@ -14,6 +14,7 @@ import { DatabaseModule } from './prisma/prisma.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserIdInterceptor } from './interceptors/UserIdInterceptor';
 import { SecurityLoggerMiddleware } from './middleware/security-logger.middleware';
+import { TrabalhosModule } from './trabalhos/trabalhos.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { SecurityLoggerMiddleware } from './middleware/security-logger.middlewar
     NotificacoesModule,
     AuthModule,
     ApiKeysModule,
+    TrabalhosModule,
   ],
   controllers: [AppController],
   providers: [

@@ -31,7 +31,8 @@ model Usuario {
   perfil         Perfil?
   notificacoes   Notificacao[]
   refreshTokens  RefreshToken[]
-  
+  trabalhos      Trabalho[]
+
   @@map("usuarios")
 }
 
@@ -39,7 +40,6 @@ model Perfil {
   id           String   @id @default(uuid())
   biografia    String?
   avatar       String?
-  tema         String   @default("claro")
   usuarioId    String   @unique @map("usuario_id")
   usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   
@@ -58,8 +58,26 @@ model Materia {
   tarefas          Tarefa[]
   provas           Prova[]
   atividades       Atividade[]
+  trabalhos        Trabalho[]
   
   @@map("materias")
+}
+
+model Trabalho {
+  id               String     @id @default(uuid())
+  titulo           String
+  descricao        String?
+  dataVencimento   DateTime?  @map("data_vencimento")
+  prioridade       Prioridade @default(MEDIA)
+  status           Status     @default(PENDENTE)
+  dataCriacao      DateTime   @default(now()) @map("data_criacao")
+  dataAtualizacao  DateTime   @updatedAt @map("data_atualizacao")
+  usuarioId        String     @map("usuario_id")
+  usuario          Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  materiaId        String?    @map("materia_id")
+  materia          Materia?   @relation(fields: [materiaId], references: [id], onDelete: SetNull)
+  
+  @@map("trabalhos")
 }
 
 model Tarefa {
@@ -119,7 +137,6 @@ model Atividade {
   titulo           String
   descricao        String?
   dataVencimento   DateTime? @map("data_vencimento")
-  peso             Float?   
   nota             Float?  
   status           Status   @default(PENDENTE)
   dataCriacao      DateTime @default(now()) @map("data_criacao")

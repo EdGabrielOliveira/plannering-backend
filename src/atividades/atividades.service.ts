@@ -20,7 +20,6 @@ export class AtividadesService {
         materiaId: createAtividadeDto.materiaId,
         usuarioId: createAtividadeDto.usuarioId,
         dataVencimento: createAtividadeDto.dataVencimento,
-        peso: createAtividadeDto.peso,
         nota: createAtividadeDto.nota,
       },
     });

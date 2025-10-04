@@ -30,6 +30,8 @@ export class MateriasService {
         usuario: true,
         tarefas: true,
         provas: true,
+        trabalhos: true,
+        atividades: true,
       },
     });
   }
@@ -41,6 +43,8 @@ export class MateriasService {
         usuario: true,
         tarefas: true,
         provas: true,
+        trabalhos: true,
+        atividades: true,
       },
     });
   }

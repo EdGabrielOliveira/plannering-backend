@@ -6,7 +6,7 @@ export class Atividade {
   materiaId: string;
   usuarioId: string;
   dataVencimento: Date;
-  peso: number;
+
   nota: number;
   status: Status;
 }
