@@ -12,7 +12,7 @@ import {
 import { NotificacoesService } from './notificacoes.service';
 import { CreateNotificacoeDto } from './dto/create-notificacoe.dto';
 import { UpdateNotificacoeDto } from './dto/update-notificacoe.dto';
-import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
+import { GetCurrentUserId } from '../decorators/get-current-user.decorator';
 import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 

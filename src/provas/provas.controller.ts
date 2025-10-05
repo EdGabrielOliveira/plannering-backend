@@ -12,7 +12,7 @@ import {
 import { ProvasService } from './provas.service';
 import { CreateProvaDto } from './dto/create-prova.dto';
 import { UpdateProvaDto } from './dto/update-prova.dto';
-import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
+import { GetCurrentUserId } from '../decorators/get-current-user.decorator';
 import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 

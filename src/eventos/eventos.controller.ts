@@ -12,7 +12,7 @@ import {
 import { EventosService } from './eventos.service';
 import { CreateEventoDto } from './dto/create-evento.dto';
 import { UpdateEventoDto } from './dto/update-evento.dto';
-import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
+import { GetCurrentUserId } from '../decorators/get-current-user.decorator';
 import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 

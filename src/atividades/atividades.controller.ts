@@ -12,7 +12,7 @@ import {
 import { AtividadesService } from './atividades.service';
 import { CreateAtividadeDto } from './dto/create-atividade.dto';
 import { UpdateAtividadeDto } from './dto/update-atividade.dto';
-import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
+import { GetCurrentUserId } from '../decorators/get-current-user.decorator';
 import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 

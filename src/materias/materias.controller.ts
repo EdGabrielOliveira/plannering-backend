@@ -12,7 +12,7 @@ import {
 import { MateriasService } from './materias.service';
 import { CreateMateriaDto } from './dto/create-materia.dto';
 import { UpdateMateriaDto } from './dto/update-materia.dto';
-import { GetCurrentUserId } from 'src/decorators/get-current-user.decorator';
+import { GetCurrentUserId } from '../decorators/get-current-user.decorator';
 import { ApiKeyGuard, ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 
