@@ -71,7 +71,7 @@ export class TrabalhosService {
     usuarioId: string,
   ) {
     return this.prismaService.trabalho.update({
-      where: { id },
+      where: { id, usuarioId },
       data: {
         titulo: updateTrabalhoDto.titulo,
         descricao: updateTrabalhoDto.descricao,
@@ -96,7 +96,7 @@ export class TrabalhosService {
 
   async remove(id: string, usuarioId: string) {
     return this.prismaService.trabalho.delete({
-      where: { id },
+      where: { id, usuarioId },
     });
   }
 }

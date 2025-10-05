@@ -8,19 +8,35 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 
+interface AuthenticatedUser {
+  id: string;
+  email: string;
+  sub: string;
+}
+
+interface RequestBody {
+  usuarioId?: string;
+  [key: string]: unknown;
+}
+
+interface RequestWithAuth {
+  user?: AuthenticatedUser;
+  clientType?: string;
+  body?: RequestBody;
+  method: string;
+}
+
 @Injectable()
 export class UserIdInterceptor implements NestInterceptor {
   private readonly logger = new Logger(UserIdInterceptor.name);
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const request = context.switchToHttp().getRequest<any>();
+    const request = context.switchToHttp().getRequest<RequestWithAuth>();
 
-    // Se está usando API Key, pular a validação de usuário
     if (request.clientType) {
       return next.handle();
     }
 
-    // Só validar usuário se for autenticação JWT
     if (!request.user) {
       this.logger.warn('Tentativa de acesso sem usuário autenticado');
       throw new UnauthorizedException('Usuário não autenticado');

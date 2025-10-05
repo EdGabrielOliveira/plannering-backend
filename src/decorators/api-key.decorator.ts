@@ -4,12 +4,6 @@ import { ApiKeyType, API_KEY_TYPES } from '../auth/api-key.guard';
 /**
  * Decorator para especificar quais tipos de API Key são aceitos
  * @param types - Array de tipos de API Key aceitos
- *
- * Exemplos:
- * @RequireApiKey([ApiKeyType.WEB]) - Apenas web
- * @RequireApiKey([ApiKeyType.MOBILE]) - Apenas mobile
- * @RequireApiKey([ApiKeyType.WEB, ApiKeyType.MOBILE]) - Ambos
- * @RequireApiKey([ApiKeyType.ANY]) - Qualquer API Key válida
  */
 export const RequireApiKey = (types: ApiKeyType[] = [ApiKeyType.ANY]) =>
   SetMetadata(API_KEY_TYPES, types);

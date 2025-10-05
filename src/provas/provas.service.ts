@@ -31,8 +31,16 @@ export class ProvasService {
     return this.prismaService.prova.findMany({
       where: { usuarioId },
       include: {
-        materia: true,
-        usuario: true,
+        materia: {
+          select: {
+            id: true,
+            nome: true,
+            cor: true,
+          },
+        },
+      },
+      orderBy: {
+        data: 'asc',
       },
     });
   }
@@ -41,8 +49,13 @@ export class ProvasService {
     return this.prismaService.prova.findUnique({
       where: { id, usuarioId },
       include: {
-        materia: true,
-        usuario: true,
+        materia: {
+          select: {
+            id: true,
+            nome: true,
+            cor: true,
+          },
+        },
       },
     });
   }

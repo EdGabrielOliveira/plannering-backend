@@ -7,6 +7,17 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
+interface AuthenticatedUser {
+  id: string;
+  email: string;
+  sub: string;
+}
+
+interface RequestWithAuth {
+  method: string;
+  url: string;
+}
+
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   private readonly logger = new Logger(JwtAuthGuard.name);
@@ -15,8 +26,13 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  handleRequest(err: any, user: any, info: any, context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest();
+  handleRequest<TUser = AuthenticatedUser>(
+    err: unknown,
+    user: unknown,
+    info: unknown,
+    context: ExecutionContext,
+  ): TUser {
+    const request = context.switchToHttp().getRequest<RequestWithAuth>();
 
     this.logger.log(`Tentativa de acesso: ${request.method} ${request.url}`);
 
@@ -35,11 +51,13 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       throw new UnauthorizedException('Acesso negado');
     }
 
-    if (!user.id || !user.email) {
+    const authenticatedUser = user as AuthenticatedUser;
+
+    if (!authenticatedUser.id || !authenticatedUser.email) {
       this.logger.warn('Token com payload inválido');
       throw new UnauthorizedException('Token inválido');
     }
 
-    return user;
+    return authenticatedUser as TUser;
   }
 }

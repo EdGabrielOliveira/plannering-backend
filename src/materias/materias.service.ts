@@ -26,12 +26,50 @@ export class MateriasService {
   findAll(usuarioId: string) {
     return this.prismaService.materia.findMany({
       where: { usuarioId },
-      include: {
-        usuario: true,
-        tarefas: true,
-        provas: true,
-        trabalhos: true,
-        atividades: true,
+      select: {
+        id: true,
+        nome: true,
+        descricao: true,
+        cor: true,
+        dataCriacao: true,
+        dataAtualizacao: true,
+        usuarioId: true,
+        tarefas: {
+          select: {
+            id: true,
+            titulo: true,
+            status: true,
+            prioridade: true,
+            dataVencimento: true,
+          },
+        },
+        provas: {
+          select: {
+            id: true,
+            titulo: true,
+            data: true,
+            status: true,
+            nota: true,
+          },
+        },
+        trabalhos: {
+          select: {
+            id: true,
+            titulo: true,
+            status: true,
+            prioridade: true,
+            dataVencimento: true,
+          },
+        },
+        atividades: {
+          select: {
+            id: true,
+            titulo: true,
+            status: true,
+            dataVencimento: true,
+            nota: true,
+          },
+        },
       },
     });
   }
@@ -39,12 +77,54 @@ export class MateriasService {
   findOne(id: string, usuarioId: string) {
     return this.prismaService.materia.findUnique({
       where: { id, usuarioId },
-      include: {
-        usuario: true,
-        tarefas: true,
-        provas: true,
-        trabalhos: true,
-        atividades: true,
+      select: {
+        id: true,
+        nome: true,
+        descricao: true,
+        cor: true,
+        dataCriacao: true,
+        dataAtualizacao: true,
+        usuarioId: true,
+        tarefas: {
+          select: {
+            id: true,
+            titulo: true,
+            status: true,
+            prioridade: true,
+            dataVencimento: true,
+            dataCriacao: true,
+          },
+        },
+        provas: {
+          select: {
+            id: true,
+            titulo: true,
+            data: true,
+            status: true,
+            nota: true,
+            local: true,
+          },
+        },
+        trabalhos: {
+          select: {
+            id: true,
+            titulo: true,
+            status: true,
+            prioridade: true,
+            dataVencimento: true,
+            dataCriacao: true,
+          },
+        },
+        atividades: {
+          select: {
+            id: true,
+            titulo: true,
+            status: true,
+            dataVencimento: true,
+            nota: true,
+            dataCriacao: true,
+          },
+        },
       },
     });
   }

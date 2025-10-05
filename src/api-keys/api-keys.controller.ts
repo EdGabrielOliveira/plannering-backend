@@ -86,6 +86,7 @@ export class ApiKeysController {
           '/api/atividades',
           '/api/provas',
           '/api/notificacoes',
+          '/api/trabalhos',
         ],
         restricted: isWeb
           ? ['/api/api-keys/mobile-only']

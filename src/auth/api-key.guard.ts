@@ -15,6 +15,18 @@ export enum ApiKeyType {
 
 export const API_KEY_TYPES = 'apiKeyTypes';
 
+interface RequestWithApiKey {
+  headers: {
+    'x-api-key'?: string;
+    [key: string]: string | string[] | undefined;
+  };
+  query?: {
+    apiKey?: string;
+    [key: string]: unknown;
+  };
+  clientType?: string;
+}
+
 @Injectable()
 export class ApiKeyGuard implements CanActivate {
   private readonly logger = new Logger(ApiKeyGuard.name);
@@ -31,7 +43,7 @@ export class ApiKeyGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<RequestWithApiKey>();
     const apiKey = this.extractApiKey(request);
 
     if (!apiKey) {
@@ -54,14 +66,14 @@ export class ApiKeyGuard implements CanActivate {
     return true;
   }
 
-  private extractApiKey(request: any): string | null {
+  private extractApiKey(request: RequestWithApiKey): string | null {
     const headerApiKey = request.headers['x-api-key'];
-    if (headerApiKey) {
+    if (headerApiKey && typeof headerApiKey === 'string') {
       return headerApiKey;
     }
 
     const queryApiKey = request.query?.apiKey;
-    if (queryApiKey) {
+    if (queryApiKey && typeof queryApiKey === 'string') {
       return queryApiKey;
     }
 

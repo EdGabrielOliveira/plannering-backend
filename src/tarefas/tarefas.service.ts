@@ -8,7 +8,6 @@ export class TarefasService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createTarefaDto: CreateTarefaDto) {
-    // Validar se usuarioId está presente
     if (!createTarefaDto.usuarioId) {
       throw new Error('usuarioId é obrigatório');
     }
@@ -31,8 +30,16 @@ export class TarefasService {
     return this.prismaService.tarefa.findMany({
       where: { usuarioId },
       include: {
-        materia: true,
-        usuario: true,
+        materia: {
+          select: {
+            id: true,
+            nome: true,
+            cor: true,
+          },
+        },
+      },
+      orderBy: {
+        dataCriacao: 'desc',
       },
     });
   }
@@ -40,6 +47,15 @@ export class TarefasService {
   findOne(id: string, usuarioId: string) {
     return this.prismaService.tarefa.findUnique({
       where: { id, usuarioId },
+      include: {
+        materia: {
+          select: {
+            id: true,
+            nome: true,
+            cor: true,
+          },
+        },
+      },
     });
   }
 

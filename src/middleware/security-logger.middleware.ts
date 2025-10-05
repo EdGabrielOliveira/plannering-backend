@@ -1,10 +1,35 @@
 import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
 
+interface AuthenticatedRequest {
+  user?: {
+    id: string;
+    email: string;
+    nome: string;
+  };
+  method: string;
+  originalUrl: string;
+  ip: string;
+  headers: {
+    'user-agent'?: string;
+    authorization?: string;
+    [key: string]: string | string[] | undefined;
+  };
+}
+
+interface ResponseWithFinish {
+  statusCode: number;
+  on(event: string, callback: () => void): void;
+}
+
 @Injectable()
 export class SecurityLoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger('SecurityLogger');
 
-  use(req: any, res: any, next: any): void {
+  use(
+    req: AuthenticatedRequest,
+    res: ResponseWithFinish,
+    next: () => void,
+  ): void {
     const startTime = Date.now();
     const { method, originalUrl, ip } = req;
     const userAgent = req.headers['user-agent'] || 'Unknown';
@@ -41,7 +66,7 @@ export class SecurityLoggerMiddleware implements NestMiddleware {
     next();
   }
 
-  private detectSuspiciousActivity(req: any): void {
+  private detectSuspiciousActivity(req: AuthenticatedRequest): void {
     const { originalUrl, headers, ip } = req;
 
     const sqlInjectionPatterns = [
@@ -75,7 +100,7 @@ export class SecurityLoggerMiddleware implements NestMiddleware {
       );
     }
 
-    const userAgent = headers['user-agent'] || '';
+    const userAgent = (headers['user-agent'] as string) || '';
     const suspiciousUserAgents = [
       /sqlmap/i,
       /nikto/i,

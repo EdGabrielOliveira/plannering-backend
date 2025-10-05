@@ -30,8 +30,16 @@ export class AtividadesService {
     return this.prismaService.atividade.findMany({
       where: { usuarioId },
       include: {
-        materia: true,
-        usuario: true,
+        materia: {
+          select: {
+            id: true,
+            nome: true,
+            cor: true,
+          },
+        },
+      },
+      orderBy: {
+        dataCriacao: 'desc',
       },
     });
   }
@@ -40,8 +48,13 @@ export class AtividadesService {
     return this.prismaService.atividade.findUnique({
       where: { usuarioId, id },
       include: {
-        materia: true,
-        usuario: true,
+        materia: {
+          select: {
+            id: true,
+            nome: true,
+            cor: true,
+          },
+        },
       },
     });
   }
